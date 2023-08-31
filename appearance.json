@@ -1,0 +1,13 @@
+{
+  "baseFontSize": 17,
+  "translucency": false,
+  "cssTheme": "Dracula Official",
+  "enabledCssSnippets": [
+    "callouts",
+    "clean-embeds"
+  ],
+  "accentColor": "",
+  "monospaceFontFamily": "Fira Code",
+  "baseFontSizeAction": true,
+  "showViewHeader": false
+}

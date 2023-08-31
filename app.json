@@ -1,0 +1,21 @@
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "showFrontmatter": false,
+  "foldHeading": true,
+  "attachmentFolderPath": "attachments",
+  "useTab": false,
+  "pdfExportSettings": {
+    "pageSize": "Letter",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 84
+  },
+  "defaultViewMode": "source",
+  "showInlineTitle": false,
+  "readableLineLength": true,
+  "showIndentGuide": false,
+  "spellcheck": true
+}

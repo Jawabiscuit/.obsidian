@@ -1,0 +1,107 @@
+
+.callout[data-callout="note"] {
+    --callout-color: 189, 147, 249;
+}
+
+.callout[data-callout="abstract"] {
+    --callout-color: 189, 147, 249;
+}
+.callout[data-callout="summary"] {
+    --callout-color: 189, 147, 249;
+}
+.callout[data-callout="tldr"] {
+    --callout-color: 189, 147, 249;
+}
+
+.callout[data-callout="info"] {
+    --callout-color: 255, 121, 198;
+}
+
+.callout[data-callout="todo"] {
+    --callout-color: 139, 233, 253;
+}
+
+.callout[data-callout="tip"] {
+    --callout-color: 139, 233, 253;
+}
+.callout[data-callout="hint"] {
+    --callout-color: 139, 233, 253;
+}
+.callout[data-callout="important"] {
+    --callout-color: 139, 233, 253;
+}
+
+
+.callout[data-callout="success"] {
+    --callout-color: 80, 250, 123;
+}
+.callout[data-callout="check"] {
+    --callout-color: 80, 250, 123;
+}
+.callout[data-callout="done"] {
+    --callout-color: 80, 250, 123;
+}
+
+/*
+.callout[data-callout="failure"] {
+    --callout-color: 255, 121, 198;
+}
+.callout[data-callout="fail"] {
+    --callout-color: 255, 121, 198;
+}
+.callout[data-callout="missing"] {
+    --callout-color: 255, 121, 198;
+}
+*/
+
+.callout[data-callout="question"] {
+    --callout-color: 255, 184, 108;
+}
+.callout[data-callout="help"] {
+    --callout-color: 255, 184, 108;
+}
+.callout[data-callout="faq"] {
+    --callout-color: 255, 184, 108;
+}
+
+
+.callout[data-callout="warning"] {
+    --callout-color: 255, 184, 108;
+}
+.callout[data-callout="caution"] {
+    --callout-color: 255, 184, 108;
+}
+.callout[data-callout="attention"] {
+    --callout-color: 255, 184, 108;
+}
+
+/*
+.callout[data-callout="danger"] {
+    --callout-color: 189, 147, 249;
+}
+.callout[data-callout="error"] {
+    --callout-color: 189, 147, 249;
+}
+
+.callout[data-callout="bug"] {
+    --callout-color: 189, 147, 249;
+}
+*/
+
+.callout[data-callout="example"] {
+    --callout-color: 189, 147, 249;
+}
+
+/*
+.callout[data-callout="quote"] {
+    --callout-color: 189, 147, 249;
+}
+*/
+
+.callout[data-callout="site"] {
+    --callout-color: 139, 233, 253;
+}
+
+.callout[data-callout="snippet"] {
+    --callout-color: 139, 233, 253;
+}
