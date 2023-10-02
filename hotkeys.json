@@ -297,14 +297,6 @@
       "key": "V"
     }
   ],
-  "quickadd:choice:d34515d1-655b-4280-8a53-7c748ca7b886": [
-    {
-      "modifiers": [
-        "Alt"
-      ],
-      "key": "C"
-    }
-  ],
   "editor:toggle-highlight": [
     {
       "modifiers": [
@@ -357,6 +349,23 @@
         "Shift"
       ],
       "key": "ArrowUp"
+    }
+  ],
+  "quickadd:choice:d34515d1-655b-4280-8a53-7c748ca7b886": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "C"
+    }
+  ],
+  "quickadd:choice:97aecca2-9349-47eb-913b-6cbdbb926a37": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "C"
     }
   ]
 }
