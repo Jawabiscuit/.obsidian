@@ -1,0 +1,3 @@
+[submodule "plugins/odin"]
+	path = plugins/odin
+	url = https://github.com/memgraph/odin.git
