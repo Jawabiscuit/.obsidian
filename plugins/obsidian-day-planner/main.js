@@ -9457,7 +9457,7 @@ var require_lodash = __commonJS({
           result2.placeholder = curryRight.placeholder;
           return result2;
         }
-        function debounce2(func, wait, options) {
+        function debounce(func, wait, options) {
           var lastArgs, lastThis, maxWait, result2, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
           if (typeof func != "function") {
             throw new TypeError2(FUNC_ERROR_TEXT);
@@ -9637,7 +9637,7 @@ var require_lodash = __commonJS({
             leading = "leading" in options ? !!options.leading : leading;
             trailing = "trailing" in options ? !!options.trailing : trailing;
           }
-          return debounce2(func, wait, {
+          return debounce(func, wait, {
             "leading": leading,
             "maxWait": wait,
             "trailing": trailing
@@ -10651,7 +10651,7 @@ var require_lodash = __commonJS({
         lodash.create = create2;
         lodash.curry = curry;
         lodash.curryRight = curryRight;
-        lodash.debounce = debounce2;
+        lodash.debounce = debounce;
         lodash.defaults = defaults;
         lodash.defaultsDeep = defaultsDeep;
         lodash.defer = defer;
@@ -20662,9 +20662,9 @@ function create_fragment20(ctx) {
     /*$displayedTasks*/
     ctx[14]
   );
-  const get_key = (ctx2) => (
+  const get_key = (ctx2) => getKey(
     /*planItem*/
-    ctx2[29].id
+    ctx2[29]
   );
   for (let i = 0; i < each_value.length; i += 1) {
     let child_ctx = get_each_context5(ctx, each_value, i);
@@ -20802,6 +20802,10 @@ function create_fragment20(ctx) {
       run_all(dispose);
     }
   };
+}
+function getKey(task) {
+  var _a;
+  return `${task.startMinutes} ${task.endMinutes} ${task.text} ${(_a = task.isGhost) !== null && _a !== void 0 ? _a : ""}`;
 }
 function instance16($$self, $$props, $$invalidate) {
   let startEdit;
@@ -21009,7 +21013,7 @@ function create_if_block3(ctx) {
     props: {
       autoScrollBlocked: (
         /*userHoversOverScroller*/
-        ctx[3]
+        ctx[2]
       )
     }
   });
@@ -21024,9 +21028,9 @@ function create_if_block3(ctx) {
     p(ctx2, dirty) {
       const needle_changes = {};
       if (dirty & /*userHoversOverScroller*/
-      8)
+      4)
         needle_changes.autoScrollBlocked = /*userHoversOverScroller*/
-        ctx2[3];
+        ctx2[2];
       needle.$set(needle_changes);
     },
     i(local) {
@@ -21044,47 +21048,20 @@ function create_if_block3(ctx) {
     }
   };
 }
-function create_catch_block(ctx) {
-  let pre;
-  let t0;
-  let t1_value = (
-    /*error*/
-    ctx[10] + ""
+function create_default_slot10(ctx) {
+  let show_if = isToday(
+    /*$visibleDayInTimeline*/
+    ctx[3]
   );
-  let t1;
-  return {
-    c() {
-      pre = element("pre");
-      t0 = text("Could not render tasks: ");
-      t1 = text(t1_value);
-    },
-    m(target, anchor) {
-      insert(target, pre, anchor);
-      append(pre, t0);
-      append(pre, t1);
-    },
-    p(ctx2, dirty) {
-      if (dirty & /*tasksPromise*/
-      16 && t1_value !== (t1_value = /*error*/
-      ctx2[10] + ""))
-        set_data(t1, t1_value);
-    },
-    i: noop,
-    o: noop,
-    d(detaching) {
-      if (detaching)
-        detach(pre);
-    }
-  };
-}
-function create_then_block(ctx) {
+  let t;
   let taskcontainer;
   let current;
+  let if_block = show_if && create_if_block3(ctx);
   taskcontainer = new task_container_default({
     props: {
       day: (
         /*$visibleDayInTimeline*/
-        ctx[2]
+        ctx[3]
       ),
       obsidianFacade: (
         /*obsidianFacade*/
@@ -21094,126 +21071,42 @@ function create_then_block(ctx) {
         /*onUpdate*/
         ctx[1]
       ),
-      tasks: addPlacing(
-        /*tasks*/
-        ctx[9]
+      tasks: (
+        /*$parsedTasks*/
+        ctx[5]
       )
     }
   });
   return {
     c() {
-      create_component(taskcontainer.$$.fragment);
-    },
-    m(target, anchor) {
-      mount_component(taskcontainer, target, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      const taskcontainer_changes = {};
-      if (dirty & /*$visibleDayInTimeline*/
-      4)
-        taskcontainer_changes.day = /*$visibleDayInTimeline*/
-        ctx2[2];
-      if (dirty & /*obsidianFacade*/
-      1)
-        taskcontainer_changes.obsidianFacade = /*obsidianFacade*/
-        ctx2[0];
-      if (dirty & /*onUpdate*/
-      2)
-        taskcontainer_changes.onUpdate = /*onUpdate*/
-        ctx2[1];
-      if (dirty & /*tasksPromise*/
-      16)
-        taskcontainer_changes.tasks = addPlacing(
-          /*tasks*/
-          ctx2[9]
-        );
-      taskcontainer.$set(taskcontainer_changes);
-    },
-    i(local) {
-      if (current)
-        return;
-      transition_in(taskcontainer.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(taskcontainer.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      destroy_component(taskcontainer, detaching);
-    }
-  };
-}
-function create_pending_block(ctx) {
-  return {
-    c: noop,
-    m: noop,
-    p: noop,
-    i: noop,
-    o: noop,
-    d: noop
-  };
-}
-function create_default_slot10(ctx) {
-  let show_if = isToday(
-    /*$visibleDayInTimeline*/
-    ctx[2]
-  );
-  let t;
-  let await_block_anchor;
-  let promise;
-  let current;
-  let if_block = show_if && create_if_block3(ctx);
-  let info = {
-    ctx,
-    current: null,
-    token: null,
-    hasCatch: true,
-    pending: create_pending_block,
-    then: create_then_block,
-    catch: create_catch_block,
-    value: 9,
-    error: 10,
-    blocks: [, , ,]
-  };
-  handle_promise(promise = /*tasksPromise*/
-  ctx[4], info);
-  return {
-    c() {
       if (if_block)
         if_block.c();
       t = space();
-      await_block_anchor = empty();
-      info.block.c();
+      create_component(taskcontainer.$$.fragment);
     },
     m(target, anchor) {
       if (if_block)
         if_block.m(target, anchor);
       insert(target, t, anchor);
-      insert(target, await_block_anchor, anchor);
-      info.block.m(target, info.anchor = anchor);
-      info.mount = () => await_block_anchor.parentNode;
-      info.anchor = await_block_anchor;
+      mount_component(taskcontainer, target, anchor);
       current = true;
     },
-    p(new_ctx, dirty) {
-      ctx = new_ctx;
+    p(ctx2, dirty) {
       if (dirty & /*$visibleDayInTimeline*/
-      4)
+      8)
         show_if = isToday(
           /*$visibleDayInTimeline*/
-          ctx[2]
+          ctx2[3]
         );
       if (show_if) {
         if (if_block) {
-          if_block.p(ctx, dirty);
+          if_block.p(ctx2, dirty);
           if (dirty & /*$visibleDayInTimeline*/
-          4) {
+          8) {
             transition_in(if_block, 1);
           }
         } else {
-          if_block = create_if_block3(ctx);
+          if_block = create_if_block3(ctx2);
           if_block.c();
           transition_in(if_block, 1);
           if_block.m(t.parentNode, t);
@@ -21225,27 +21118,35 @@ function create_default_slot10(ctx) {
         });
         check_outros();
       }
-      info.ctx = ctx;
-      if (dirty & /*tasksPromise*/
-      16 && promise !== (promise = /*tasksPromise*/
-      ctx[4]) && handle_promise(promise, info)) {
-      } else {
-        update_await_block_branch(info, ctx, dirty);
-      }
+      const taskcontainer_changes = {};
+      if (dirty & /*$visibleDayInTimeline*/
+      8)
+        taskcontainer_changes.day = /*$visibleDayInTimeline*/
+        ctx2[3];
+      if (dirty & /*obsidianFacade*/
+      1)
+        taskcontainer_changes.obsidianFacade = /*obsidianFacade*/
+        ctx2[0];
+      if (dirty & /*onUpdate*/
+      2)
+        taskcontainer_changes.onUpdate = /*onUpdate*/
+        ctx2[1];
+      if (dirty & /*$parsedTasks*/
+      32)
+        taskcontainer_changes.tasks = /*$parsedTasks*/
+        ctx2[5];
+      taskcontainer.$set(taskcontainer_changes);
     },
     i(local) {
       if (current)
         return;
       transition_in(if_block);
-      transition_in(info.block);
+      transition_in(taskcontainer.$$.fragment, local);
       current = true;
     },
     o(local) {
       transition_out(if_block);
-      for (let i = 0; i < 3; i += 1) {
-        const block = info.blocks[i];
-        transition_out(block);
-      }
+      transition_out(taskcontainer.$$.fragment, local);
       current = false;
     },
     d(detaching) {
@@ -21253,11 +21154,7 @@ function create_default_slot10(ctx) {
         if_block.d(detaching);
       if (detaching)
         detach(t);
-      if (detaching)
-        detach(await_block_anchor);
-      info.block.d(detaching);
-      info.token = null;
-      info = null;
+      destroy_component(taskcontainer, detaching);
     }
   };
 }
@@ -21276,7 +21173,7 @@ function create_fragment21(ctx) {
     props: {
       day: (
         /*$visibleDayInTimeline*/
-        ctx[2]
+        ctx[3]
       ),
       obsidianFacade: (
         /*obsidianFacade*/
@@ -21287,14 +21184,14 @@ function create_fragment21(ctx) {
   ruler = new ruler_default({
     props: { visibleHours: (
       /*$visibleHours*/
-      ctx[5]
+      ctx[4]
     ) }
   });
   column = new column_default({
     props: {
       visibleHours: (
         /*$visibleHours*/
-        ctx[5]
+        ctx[4]
       ),
       $$slots: { default: [create_default_slot10] },
       $$scope: { ctx }
@@ -21342,9 +21239,9 @@ function create_fragment21(ctx) {
     p(ctx2, [dirty]) {
       const controls_changes = {};
       if (dirty & /*$visibleDayInTimeline*/
-      4)
+      8)
         controls_changes.day = /*$visibleDayInTimeline*/
-        ctx2[2];
+        ctx2[3];
       if (dirty & /*obsidianFacade*/
       1)
         controls_changes.obsidianFacade = /*obsidianFacade*/
@@ -21352,17 +21249,17 @@ function create_fragment21(ctx) {
       controls.$set(controls_changes);
       const ruler_changes = {};
       if (dirty & /*$visibleHours*/
-      32)
+      16)
         ruler_changes.visibleHours = /*$visibleHours*/
-        ctx2[5];
+        ctx2[4];
       ruler.$set(ruler_changes);
       const column_changes = {};
       if (dirty & /*$visibleHours*/
-      32)
+      16)
         column_changes.visibleHours = /*$visibleHours*/
-        ctx2[5];
-      if (dirty & /*$$scope, tasksPromise, $visibleDayInTimeline, obsidianFacade, onUpdate, userHoversOverScroller*/
-      2079) {
+        ctx2[4];
+      if (dirty & /*$$scope, $visibleDayInTimeline, obsidianFacade, onUpdate, $parsedTasks, userHoversOverScroller*/
+      559) {
         column_changes.$$scope = { dirty, ctx: ctx2 };
       }
       column.$set(column_changes);
@@ -21395,49 +21292,45 @@ function create_fragment21(ctx) {
   };
 }
 function instance17($$self, $$props, $$invalidate) {
-  let dailyNote;
-  let tasksPromise;
   let $visibleDayInTimeline;
   let $visibleHours;
-  component_subscribe($$self, visibleDayInTimeline, ($$value) => $$invalidate(2, $visibleDayInTimeline = $$value));
-  component_subscribe($$self, visibleHours, ($$value) => $$invalidate(5, $visibleHours = $$value));
+  let $parsedTasks;
+  component_subscribe($$self, visibleDayInTimeline, ($$value) => $$invalidate(3, $visibleDayInTimeline = $$value));
+  component_subscribe($$self, visibleHours, ($$value) => $$invalidate(4, $visibleHours = $$value));
   let { obsidianFacade } = $$props;
   let { onUpdate } = $$props;
   let userHoversOverScroller = false;
   function handleMouseEnter() {
-    $$invalidate(3, userHoversOverScroller = true);
+    $$invalidate(2, userHoversOverScroller = true);
   }
   function handleMouseLeave() {
-    $$invalidate(3, userHoversOverScroller = false);
+    $$invalidate(2, userHoversOverScroller = false);
   }
+  const parsedTasks = derived(
+    visibleDayInTimeline,
+    (v, set) => {
+      const note = (0, import_obsidian_daily_notes_interface4.getDailyNote)(v, (0, import_obsidian_daily_notes_interface4.getAllDailyNotes)());
+      obsidianFacade.getPlanItemsFromFile(note).then((v2) => set(addPlacing(v2)));
+    },
+    []
+  );
+  component_subscribe($$self, parsedTasks, (value) => $$invalidate(5, $parsedTasks = value));
   $$self.$$set = ($$props2) => {
     if ("obsidianFacade" in $$props2)
       $$invalidate(0, obsidianFacade = $$props2.obsidianFacade);
     if ("onUpdate" in $$props2)
       $$invalidate(1, onUpdate = $$props2.onUpdate);
   };
-  $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*$visibleDayInTimeline*/
-    4) {
-      $:
-        $$invalidate(8, dailyNote = (0, import_obsidian_daily_notes_interface4.getDailyNote)($visibleDayInTimeline, (0, import_obsidian_daily_notes_interface4.getAllDailyNotes)()));
-    }
-    if ($$self.$$.dirty & /*obsidianFacade, dailyNote*/
-    257) {
-      $:
-        $$invalidate(4, tasksPromise = obsidianFacade.getPlanItemsFromFile(dailyNote));
-    }
-  };
   return [
     obsidianFacade,
     onUpdate,
-    $visibleDayInTimeline,
     userHoversOverScroller,
-    tasksPromise,
+    $visibleDayInTimeline,
     $visibleHours,
+    $parsedTasks,
     handleMouseEnter,
     handleMouseLeave,
-    dailyNote
+    parsedTasks
   ];
 }
 var Timeline = class extends SvelteComponent {
@@ -21923,7 +21816,7 @@ function create_if_block4(ctx) {
     }
   };
 }
-function create_catch_block2(ctx) {
+function create_catch_block(ctx) {
   let pre;
   let t0;
   let t1_value = (
@@ -21956,7 +21849,7 @@ function create_catch_block2(ctx) {
     }
   };
 }
-function create_then_block2(ctx) {
+function create_then_block(ctx) {
   let taskcontainer;
   let current;
   taskcontainer = new task_container_default({
@@ -22024,7 +21917,7 @@ function create_then_block2(ctx) {
     }
   };
 }
-function create_pending_block2(ctx) {
+function create_pending_block(ctx) {
   return {
     c: noop,
     m: noop,
@@ -22049,9 +21942,9 @@ function create_default_slot12(ctx) {
     current: null,
     token: null,
     hasCatch: true,
-    pending: create_pending_block2,
-    then: create_then_block2,
-    catch: create_catch_block2,
+    pending: create_pending_block,
+    then: create_then_block,
+    catch: create_catch_block,
     value: 8,
     error: 9,
     blocks: [, , ,]
@@ -22444,14 +22337,6 @@ var WeeklyView = class extends import_obsidian5.ItemView {
 var DayPlanner = class extends import_obsidian6.Plugin {
   constructor() {
     super(...arguments);
-    this.triggerReparse = (0, import_obsidian6.debounce)(
-      () => {
-        visibleDateRange.update((prev) => [...prev]);
-        visibleDayInTimeline.update((prev) => prev.clone());
-      },
-      4e3,
-      true
-    );
     this.handleActiveLeafChanged = ({ view }) => {
       if (!(view instanceof import_obsidian6.FileView) || !view.file) {
         return;
@@ -22527,7 +22412,8 @@ var DayPlanner = class extends import_obsidian6.Plugin {
     this.app.workspace.onLayoutReady(this.handleLayoutReady);
     this.app.workspace.on("active-leaf-change", this.handleActiveLeafChanged);
     this.app.metadataCache.on("changed", async (file) => {
-      this.triggerReparse();
+      visibleDateRange.update((prev) => [...prev]);
+      visibleDayInTimeline.update((prev) => prev.clone());
     });
     this.registerInterval(
       window.setInterval(
