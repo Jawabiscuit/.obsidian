@@ -351,21 +351,47 @@
       "key": "ArrowUp"
     }
   ],
-  "quickadd:choice:d34515d1-655b-4280-8a53-7c748ca7b886": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": "C"
-    }
-  ],
   "quickadd:choice:97aecca2-9349-47eb-913b-6cbdbb926a37": [
     {
       "modifiers": [
         "Alt"
       ],
       "key": "C"
+    }
+  ],
+  "quickadd:choice:a0be37e0-3039-47bf-9346-147686a844d6": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "P"
+    }
+  ],
+  "quickadd:choice:89c16e34-fca2-4a5d-b698-315586373c45": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "G"
+    }
+  ],
+  "quickadd:choice:c11b489b-0b55-45ab-9a8e-e13bac52e1a9": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "P"
+    }
+  ],
+  "quickadd:choice:d34515d1-655b-4280-8a53-7c748ca7b886": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": " "
     }
   ]
 }
