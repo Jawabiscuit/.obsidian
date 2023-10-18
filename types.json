@@ -4,6 +4,7 @@
     "cssclasses": "multitext",
     "tags": "tags",
     "target": "number",
-    "progress": "number"
+    "progress": "number",
+    "system_commands": "multitext"
   }
 }
