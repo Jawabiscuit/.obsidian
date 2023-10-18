@@ -13,10 +13,11 @@
   "open-vscode",
   "quickadd",
   "quick-latex",
-  "obsidian-auto-link-title",
   "obsidian42-brat",
   "obsidian-day-planner",
   "obsidian-map-view",
   "metaedit",
-  "obsidian-kanban"
+  "obsidian-kanban",
+  "obsidian-advanced-uri",
+  "time-ruler"
 ]
