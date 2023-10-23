@@ -5,6 +5,7 @@
     "tags": "tags",
     "target": "number",
     "progress": "number",
-    "system_commands": "multitext"
+    "system_commands": "multitext",
+    "active": "checkbox"
   }
 }
