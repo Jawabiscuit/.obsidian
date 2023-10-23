@@ -6,6 +6,11 @@
     "target": "number",
     "progress": "number",
     "system_commands": "multitext",
-    "active": "checkbox"
+    "location": "text",
+    "active": "checkbox",
+    "modification date": "text",
+    "created": "datetime",
+    "applied": "datetime",
+    "hiring": "checkbox"
   }
 }
