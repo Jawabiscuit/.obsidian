@@ -1,4 +1,7 @@
 /* src/time-ruler/src/styles.css */
+#time-ruler :is(.\!static) {
+  position: static !important;
+}
 #time-ruler :is(.fixed) {
   position: fixed;
 }
@@ -13,6 +16,12 @@
 }
 #time-ruler :is(.sticky) {
   position: sticky;
+}
+#time-ruler :is(.\!left-auto) {
+  left: auto !important;
+}
+#time-ruler :is(.\!top-auto) {
+  top: auto !important;
 }
 #time-ruler :is(.bottom-6) {
   bottom: 1.5rem;
@@ -143,6 +152,9 @@
 #time-ruler :is(.h-line) {
   height: calc(var(--line-height-normal) * 1em);
 }
+#time-ruler :is(.max-h-\[40\%\]) {
+  max-height: 40%;
+}
 #time-ruler :is(.max-h-\[50vh\]) {
   max-height: 50vh;
 }
@@ -199,6 +211,9 @@
 }
 #time-ruler :is(.w-8) {
   width: 2rem;
+}
+#time-ruler :is(.w-\[3em\]) {
+  width: 3em;
 }
 #time-ruler :is(.w-\[4em\]) {
   width: 4em;
@@ -382,6 +397,9 @@
 }
 #time-ruler :is(.bg-accent) {
   background-color: var(--text-accent);
+}
+#time-ruler :is(.bg-black\/50) {
+  background-color: rgb(0 0 0 / 0.5);
 }
 #time-ruler :is(.bg-gray-500\/5) {
   background-color: rgb(107 114 128 / 0.05);
@@ -634,6 +652,34 @@
   .selectable:hover {
     background-color: var(--background-modifier-hover);
   }
+}
+.tr-menu {
+  position: absolute;
+  left: 0px;
+  top: 100%;
+  z-index: 50;
+  max-width: 80vw;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.tr-menu > div {
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--text-faint);
+  background-color: var(--background-primary);
+  padding: 0.5rem;
+}
+.tr-menu > div > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important;
+}
+.tr-menu > div > div > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 #time-ruler :is(button) {
   transition-property:
