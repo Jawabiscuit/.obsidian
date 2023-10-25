@@ -15,7 +15,7 @@
   },
   "defaultViewMode": "source",
   "showInlineTitle": false,
-  "readableLineLength": false,
+  "readableLineLength": true,
   "showIndentGuide": false,
   "spellcheck": true
 }
