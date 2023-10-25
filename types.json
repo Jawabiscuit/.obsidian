@@ -11,6 +11,7 @@
     "modification date": "text",
     "created": "datetime",
     "applied": "datetime",
-    "hiring": "checkbox"
+    "hiring": "checkbox",
+    "application sent": "checkbox"
   }
 }
