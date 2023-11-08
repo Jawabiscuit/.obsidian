@@ -393,5 +393,14 @@
       ],
       "key": " "
     }
+  ],
+  "templater-obsidian:_templates/templater/planner-chooser.md": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "P"
+    }
   ]
 }
