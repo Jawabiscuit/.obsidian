@@ -26,7 +26,15 @@
       "key": "V"
     }
   ],
-  "templater-obsidian:create-new-note-from-template": [],
+  "templater-obsidian:create-new-note-from-template": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "O"
+    }
+  ],
   "editor:attach-file": [
     {
       "modifiers": [
@@ -401,6 +409,32 @@
         "Shift"
       ],
       "key": "P"
+    }
+  ],
+  "quickadd:choice:a9e253cc-b7c5-4ff1-9952-20a072200a5c": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "O"
+    }
+  ],
+  "quickadd:choice:4616346d-e95f-4e2e-af93-27c49430a85e": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "J"
+    }
+  ],
+  "quickadd:choice:1ef32d04-5d0a-40fb-9d94-cf3135579fba": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "B"
     }
   ]
 }
