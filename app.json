@@ -15,7 +15,7 @@
   },
   "defaultViewMode": "source",
   "showInlineTitle": false,
-  "readableLineLength": true,
+  "readableLineLength": false,
   "showIndentGuide": false,
   "spellcheck": true,
   "propertiesInDocument": "hidden"
