@@ -5182,6 +5182,7 @@ var Blob2 = _window.Blob;
 var isSupported = XMLHttpRequest2 && Blob2 && typeof Blob2.prototype.slice === "function";
 
 // src/transcribe.ts
+var MAX_TRIES = 100;
 var TranscriptionEngine = class {
   constructor(settings, vault, statusBar, supabase) {
     this.transcription_engines = {
@@ -5265,6 +5266,7 @@ var TranscriptionEngine = class {
     const id = session.session.user.id;
     const fileStream = await this.vault.readBinary(file);
     const filename = file.name.replace(/[^a-zA-Z0-9.]+/g, "-");
+    let uploadProgressNotice = null;
     const uploadPromise = new Promise((resolve, reject) => {
       const upload = new Upload(new Blob([fileStream]), {
         endpoint: `https://auth.swiftink.io/storage/v1/upload/resumable`,
@@ -5279,19 +5281,25 @@ var TranscriptionEngine = class {
           objectName: `${id}/${filename}`
         },
         chunkSize: 6 * 1024 * 1024,
-        onError: (error) => {
-          if (this.settings.debug)
-            console.log("Failed because: " + error);
-          reject(error);
-        },
         onProgress: (bytesUploaded, bytesTotal) => {
           const percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-          if (this.settings.debug)
+          const noticeMessage = `Uploading: ${percentage}%`;
+          if (!uploadProgressNotice) {
+            uploadProgressNotice = new import_obsidian3.Notice(noticeMessage, 800 * 100);
+          } else {
+            uploadProgressNotice.setMessage(noticeMessage);
+          }
+          if (this.settings.debug) {
             console.log(bytesUploaded, bytesTotal, percentage + "%");
+          }
         },
         onSuccess: () => {
-          if (this.settings.debug)
+          if (this.settings.debug) {
             console.log(`Successfully uploaded ${filename} to Swiftink`);
+          }
+          if (uploadProgressNotice) {
+            uploadProgressNotice.hide();
+          }
           resolve(upload);
         }
       });
@@ -5301,17 +5309,16 @@ var TranscriptionEngine = class {
       await uploadPromise;
       new import_obsidian3.Notice(`Successfully uploaded ${filename} to Swiftink`);
     } catch (error) {
-      if (this.settings.debug)
+      if (this.settings.debug) {
         console.log("Failed to upload to Swiftink: ", error);
+      }
       return Promise.reject(error);
     }
+    let transcriptionProgressNotice = null;
     const fileUrl = `https://auth.swiftink.io/storage/v1/object/public/swiftink-upload/${id}/${filename}`;
     const url = `${api_base}/transcripts/`;
     const headers = { Authorization: `Bearer ${token}` };
-    let body = {
-      name: filename,
-      url: fileUrl
-    };
+    const body = { name: filename, url: fileUrl };
     if (this.settings.language != "auto")
       body.language = this.settings.language;
     if (this.settings.debug)
@@ -5334,11 +5341,19 @@ var TranscriptionEngine = class {
     if (this.settings.debug)
       console.log(transcript);
     let completed_statuses = ["transcribed", "complete"];
-    if (this.settings.embedSummary || this.settings.embedOutline, this.settings.embedKeywords) {
+    if (this.settings.embedSummary || this.settings.embedOutline || this.settings.embedKeywords) {
       completed_statuses = ["complete"];
     }
     return new Promise((resolve, reject) => {
       let tries = 0;
+      const updateTranscriptionNotice = () => {
+        const noticeMessage = `Transcribing ${transcript.name}...`;
+        if (!transcriptionProgressNotice) {
+          transcriptionProgressNotice = new import_obsidian3.Notice(noticeMessage, 800 * 100);
+        } else {
+          transcriptionProgressNotice.setMessage(noticeMessage);
+        }
+      };
       const poll = setInterval(async () => {
         const options2 = {
           method: "GET",
@@ -5349,8 +5364,11 @@ var TranscriptionEngine = class {
         transcript = transcript_res.json;
         if (this.settings.debug)
           console.log(transcript);
-        if (transcript.status && completed_statuses.contains(transcript.status)) {
+        if (transcript.status && completed_statuses.includes(transcript.status)) {
           clearInterval(poll);
+          if (transcriptionProgressNotice) {
+            transcriptionProgressNotice.hide();
+          }
           new import_obsidian3.Notice(`Successfully transcribed ${filename} with Swiftink`);
           resolve(this.formatSwiftinkResults(transcript));
         } else if (transcript.status == "failed") {
@@ -5363,11 +5381,13 @@ var TranscriptionEngine = class {
             console.error("Swiftink has detected an invalid file");
           clearInterval(poll);
           reject("Swiftink has detected an invalid file");
-        } else if (tries > 20) {
+        } else if (tries > MAX_TRIES) {
           if (this.settings.debug)
             console.error("Swiftink took too long to transcribe the file");
           clearInterval(poll);
           reject("Swiftink took too long to transcribe the file");
+        } else {
+          updateTranscriptionNotice();
         }
         tries++;
       }, 3e3);
@@ -5715,7 +5735,7 @@ var PostgrestBuilder = class {
             };
           }
         }
-        if (error && this.isMaybeSingle && ((_c = error === null || error === void 0 ? void 0 : error.details) === null || _c === void 0 ? void 0 : _c.includes("Results contain 0 rows"))) {
+        if (error && this.isMaybeSingle && ((_c = error === null || error === void 0 ? void 0 : error.details) === null || _c === void 0 ? void 0 : _c.includes("0 rows"))) {
           error = null;
           status = 200;
           statusText = "OK";
@@ -5774,20 +5794,20 @@ var PostgrestTransformBuilder = class extends PostgrestBuilder {
     this.headers["Prefer"] += "return=representation";
     return this;
   }
-  order(column, { ascending = true, nullsFirst, foreignTable } = {}) {
-    const key = foreignTable ? `${foreignTable}.order` : "order";
+  order(column, { ascending = true, nullsFirst, foreignTable, referencedTable = foreignTable } = {}) {
+    const key = referencedTable ? `${referencedTable}.order` : "order";
     const existingOrder = this.url.searchParams.get(key);
     this.url.searchParams.set(key, `${existingOrder ? `${existingOrder},` : ""}${column}.${ascending ? "asc" : "desc"}${nullsFirst === void 0 ? "" : nullsFirst ? ".nullsfirst" : ".nullslast"}`);
     return this;
   }
-  limit(count, { foreignTable } = {}) {
-    const key = typeof foreignTable === "undefined" ? "limit" : `${foreignTable}.limit`;
+  limit(count, { foreignTable, referencedTable = foreignTable } = {}) {
+    const key = typeof referencedTable === "undefined" ? "limit" : `${referencedTable}.limit`;
     this.url.searchParams.set(key, `${count}`);
     return this;
   }
-  range(from, to, { foreignTable } = {}) {
-    const keyOffset = typeof foreignTable === "undefined" ? "offset" : `${foreignTable}.offset`;
-    const keyLimit = typeof foreignTable === "undefined" ? "limit" : `${foreignTable}.limit`;
+  range(from, to, { foreignTable, referencedTable = foreignTable } = {}) {
+    const keyOffset = typeof referencedTable === "undefined" ? "offset" : `${referencedTable}.offset`;
+    const keyLimit = typeof referencedTable === "undefined" ? "limit" : `${referencedTable}.limit`;
     this.url.searchParams.set(keyOffset, `${from}`);
     this.url.searchParams.set(keyLimit, `${to - from + 1}`);
     return this;
@@ -5818,6 +5838,7 @@ var PostgrestTransformBuilder = class extends PostgrestBuilder {
     return this;
   }
   explain({ analyze = false, verbose = false, settings = false, buffers = false, wal = false, format: format2 = "text" } = {}) {
+    var _a;
     const options = [
       analyze ? "analyze" : null,
       verbose ? "verbose" : null,
@@ -5825,7 +5846,7 @@ var PostgrestTransformBuilder = class extends PostgrestBuilder {
       buffers ? "buffers" : null,
       wal ? "wal" : null
     ].filter(Boolean).join("|");
-    const forMediatype = this.headers["Accept"];
+    const forMediatype = (_a = this.headers["Accept"]) !== null && _a !== void 0 ? _a : "application/json";
     this.headers["Accept"] = `application/vnd.pgrst.plan+${format2}; for="${forMediatype}"; options=${options};`;
     if (format2 === "json")
       return this;
@@ -5981,8 +6002,8 @@ var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
     this.url.searchParams.append(column, `not.${operator}.${value}`);
     return this;
   }
-  or(filters, { foreignTable } = {}) {
-    const key = foreignTable ? `${foreignTable}.or` : "or";
+  or(filters, { foreignTable, referencedTable = foreignTable } = {}) {
+    const key = referencedTable ? `${referencedTable}.or` : "or";
     this.url.searchParams.append(key, `(${filters})`);
     return this;
   }
@@ -6129,7 +6150,7 @@ var PostgrestQueryBuilder = class {
 };
 
 // node_modules/@supabase/postgrest-js/dist/module/version.js
-var version2 = "1.8.4";
+var version2 = "1.9.0";
 
 // node_modules/@supabase/postgrest-js/dist/module/constants.js
 var DEFAULT_HEADERS = { "X-Client-Info": `postgrest-js/${version2}` };
@@ -6190,7 +6211,7 @@ var PostgrestClient = class {
 var import_websocket = __toESM(require_browser2());
 
 // node_modules/@supabase/realtime-js/dist/module/lib/version.js
-var version3 = "2.8.0";
+var version3 = "2.8.4";
 
 // node_modules/@supabase/realtime-js/dist/module/lib/constants.js
 var DEFAULT_HEADERS2 = { "X-Client-Info": `realtime-js/${version3}` };
@@ -6301,7 +6322,6 @@ var Push = class {
     this.receivedResp = null;
     this.recHooks = [];
     this.refEvent = null;
-    this.rateLimited = false;
   }
   resend(timeout) {
     this.timeout = timeout;
@@ -6318,16 +6338,13 @@ var Push = class {
     }
     this.startTimeout();
     this.sent = true;
-    const status = this.channel.socket.push({
+    this.channel.socket.push({
       topic: this.channel.topic,
       event: this.event,
       payload: this.payload,
       ref: this.ref,
       join_ref: this.channel._joinRef()
     });
-    if (status === "rate limited") {
-      this.rateLimited = true;
-    }
   }
   updatePayload(payload) {
     this.payload = Object.assign(Object.assign({}, this.payload), payload);
@@ -6843,10 +6860,10 @@ var RealtimeChannel = class {
   on(type, filter, callback) {
     return this._on(type, filter, callback);
   }
-  async send(payload, opts = {}) {
+  async send(args, opts = {}) {
     var _a, _b;
-    if (!this._canPush() && payload.type === "broadcast") {
-      const { event, payload: endpoint_payload } = payload;
+    if (!this._canPush() && args.type === "broadcast") {
+      const { event, payload: endpoint_payload } = args;
       const options = {
         method: "POST",
         headers: {
@@ -6876,11 +6893,8 @@ var RealtimeChannel = class {
     } else {
       return new Promise((resolve) => {
         var _a2, _b2, _c;
-        const push = this._push(payload.type, payload, opts.timeout || this.timeout);
-        if (push.rateLimited) {
-          resolve("rate limited");
-        }
-        if (payload.type === "broadcast" && !((_c = (_b2 = (_a2 = this.params) === null || _a2 === void 0 ? void 0 : _a2.config) === null || _b2 === void 0 ? void 0 : _b2.broadcast) === null || _c === void 0 ? void 0 : _c.ack)) {
+        const push = this._push(args.type, args, opts.timeout || this.timeout);
+        if (args.type === "broadcast" && !((_c = (_b2 = (_a2 = this.params) === null || _a2 === void 0 ? void 0 : _a2.config) === null || _b2 === void 0 ? void 0 : _b2.broadcast) === null || _c === void 0 ? void 0 : _c.ack)) {
           resolve("ok");
         }
         push.receive("ok", () => resolve("ok"));
@@ -7093,7 +7107,7 @@ var noop2 = () => {
 };
 var RealtimeClient = class {
   constructor(endPoint, options) {
-    var _a, _b;
+    var _a;
     this.accessToken = null;
     this.channels = [];
     this.endPoint = "";
@@ -7115,8 +7129,6 @@ var RealtimeClient = class {
       error: [],
       message: []
     };
-    this.eventsPerSecondLimitMs = 100;
-    this.inThrottle = false;
     this._resolveFetch = (customFetch) => {
       let _fetch;
       if (customFetch) {
@@ -7141,10 +7153,7 @@ var RealtimeClient = class {
       this.transport = options.transport;
     if (options === null || options === void 0 ? void 0 : options.heartbeatIntervalMs)
       this.heartbeatIntervalMs = options.heartbeatIntervalMs;
-    const eventsPerSecond = (_a = options === null || options === void 0 ? void 0 : options.params) === null || _a === void 0 ? void 0 : _a.eventsPerSecond;
-    if (eventsPerSecond)
-      this.eventsPerSecondLimitMs = Math.floor(1e3 / eventsPerSecond);
-    const accessToken = (_b = options === null || options === void 0 ? void 0 : options.params) === null || _b === void 0 ? void 0 : _b.apikey;
+    const accessToken = (_a = options === null || options === void 0 ? void 0 : options.params) === null || _a === void 0 ? void 0 : _a.apikey;
     if (accessToken)
       this.accessToken = accessToken;
     this.reconnectAfterMs = (options === null || options === void 0 ? void 0 : options.reconnectAfterMs) ? options.reconnectAfterMs : (tries) => {
@@ -7227,7 +7236,7 @@ var RealtimeClient = class {
   }
   push(data) {
     const { topic, event, payload, ref } = data;
-    let callback = () => {
+    const callback = () => {
       this.encode(data, (result) => {
         var _a;
         (_a = this.conn) === null || _a === void 0 ? void 0 : _a.send(result);
@@ -7235,14 +7244,7 @@ var RealtimeClient = class {
     };
     this.log("push", `${topic} ${event} (${ref})`, payload);
     if (this.isConnected()) {
-      if (["broadcast", "presence", "postgres_changes"].includes(event)) {
-        const isThrottled = this._throttle(callback)();
-        if (isThrottled) {
-          return "rate limited";
-        }
-      } else {
-        callback();
-      }
+      callback();
     } else {
       this.sendBuffer.push(callback);
     }
@@ -7345,20 +7347,6 @@ var RealtimeClient = class {
       ref: this.pendingHeartbeatRef
     });
     this.setAuth(this.accessToken);
-  }
-  _throttle(callback, eventsPerSecondLimitMs = this.eventsPerSecondLimitMs) {
-    return () => {
-      if (this.inThrottle)
-        return true;
-      callback();
-      if (eventsPerSecondLimitMs > 0) {
-        this.inThrottle = true;
-        setTimeout(() => {
-          this.inThrottle = false;
-        }, eventsPerSecondLimitMs);
-      }
-      return false;
-    };
   }
 };
 
@@ -7986,7 +7974,7 @@ var StorageClient = class extends StorageBucketApi {
 };
 
 // node_modules/@supabase/supabase-js/dist/module/lib/version.js
-var version5 = "2.38.0";
+var version5 = "2.38.5";
 
 // node_modules/@supabase/supabase-js/dist/module/lib/constants.js
 var JS_ENV = "";
@@ -8273,7 +8261,8 @@ function base64urlencode(str) {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 async function generatePKCEChallenge(verifier) {
-  if (typeof crypto === "undefined") {
+  const hasCryptoSupport = typeof crypto !== "undefined" && typeof crypto.subtle !== "undefined" && typeof TextEncoder !== "undefined";
+  if (!hasCryptoSupport) {
     console.warn("WebCrypto API is not supported. Code challenge method will default to use plain instead of sha256.");
     return verifier;
   }
@@ -8707,7 +8696,7 @@ var GoTrueAdminApi = class {
 };
 
 // node_modules/@supabase/gotrue-js/dist/module/lib/version.js
-var version6 = "2.54.2";
+var version6 = "2.57.0";
 
 // node_modules/@supabase/gotrue-js/dist/module/lib/constants.js
 var GOTRUE_URL = "http://localhost:9999";
@@ -9202,8 +9191,16 @@ var GoTrueClient = class {
     var _a, _b, _c;
     try {
       await this._removeSession();
+      let codeChallenge = null;
+      let codeChallengeMethod = null;
+      if (this.flowType === "pkce") {
+        const codeVerifier = generatePKCEVerifier();
+        await setItemAsync(this.storage, `${this.storageKey}-code-verifier`, codeVerifier);
+        codeChallenge = await generatePKCEChallenge(codeVerifier);
+        codeChallengeMethod = codeVerifier === codeChallenge ? "plain" : "s256";
+      }
       return await _request(this.fetch, "POST", `${this.url}/sso`, {
-        body: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, "providerId" in params ? { provider_id: params.providerId } : null), "domain" in params ? { domain: params.domain } : null), { redirect_to: (_b = (_a = params.options) === null || _a === void 0 ? void 0 : _a.redirectTo) !== null && _b !== void 0 ? _b : void 0 }), ((_c = params === null || params === void 0 ? void 0 : params.options) === null || _c === void 0 ? void 0 : _c.captchaToken) ? { gotrue_meta_security: { captcha_token: params.options.captchaToken } } : null), { skip_http_redirect: true }),
+        body: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, "providerId" in params ? { provider_id: params.providerId } : null), "domain" in params ? { domain: params.domain } : null), { redirect_to: (_b = (_a = params.options) === null || _a === void 0 ? void 0 : _a.redirectTo) !== null && _b !== void 0 ? _b : void 0 }), ((_c = params === null || params === void 0 ? void 0 : params.options) === null || _c === void 0 ? void 0 : _c.captchaToken) ? { gotrue_meta_security: { captcha_token: params.options.captchaToken } } : null), { skip_http_redirect: true, code_challenge: codeChallenge, code_challenge_method: codeChallengeMethod }),
         headers: this.headers,
         xform: _ssoResponse
       });
@@ -10439,7 +10436,7 @@ ${transcription}`,
         if (view.file === null)
           return;
         const filesToTranscribe = getTranscribeableFiles(view.file);
-        new import_obsidian4.Notice("Transcribing all audio files in " + view.file.name, 3e3);
+        new import_obsidian4.Notice("Files Selected " + view.file.name, 3e3);
         for (const fileToTranscribe of filesToTranscribe) {
           transcribeAndWrite(view.file, fileToTranscribe);
         }
@@ -10462,7 +10459,7 @@ ${transcription}`,
           onChooseItem(file) {
             if (view.file === null)
               return;
-            new import_obsidian4.Notice(`Transcribing ${file.name}`);
+            new import_obsidian4.Notice(`File Selected: ${file.name}`);
             transcribeAndWrite(view.file, file);
           }
         }
