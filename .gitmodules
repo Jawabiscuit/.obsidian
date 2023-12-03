@@ -1,0 +1,3 @@
+[submodule "plugins/chatgpt-md"]
+	path = plugins/chatgpt-md
+	url = https://github.com/jchase/chatgpt-md.git
