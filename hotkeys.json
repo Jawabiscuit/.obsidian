@@ -244,15 +244,6 @@
       "key": "ArrowUp"
     }
   ],
-  "obsidian-timestamp-notes:pause-player": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": " "
-    }
-  ],
   "workspace:toggle-pin": [
     {
       "modifiers": [
@@ -435,6 +426,15 @@
         "Shift"
       ],
       "key": "B"
+    }
+  ],
+  "quickadd:runQuickAdd": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": " "
     }
   ]
 }
