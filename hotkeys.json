@@ -444,5 +444,23 @@
       ],
       "key": "I"
     }
-  ]
+  ],
+  "quickadd:choice:d6addb58-c412-49ad-9356-d788ac4640f6": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "O"
+    }
+  ],
+  "quickadd:choice:b9c1c36f-756d-4b9e-a3d8-0a53caa8511b": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "E"
+    }
+  ],
+  "obsidian-excalidraw-plugin:toggle-lock": []
 }
