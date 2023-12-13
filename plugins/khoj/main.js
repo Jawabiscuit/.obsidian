@@ -5874,9 +5874,10 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let { contentEl } = this;
     contentEl.addClass("khoj-chat");
     contentEl.createEl("h1", { attr: { id: "khoj-chat-title" }, text: "Khoj Chat" });
-    contentEl.createDiv({ attr: { id: "khoj-chat-body", class: "khoj-chat-body" } });
-    await this.getChatHistory();
-    const chatInput = contentEl.createEl("input", {
+    let chatBodyEl = contentEl.createDiv({ attr: { id: "khoj-chat-body", class: "khoj-chat-body" } });
+    await this.getChatHistory(chatBodyEl);
+    let inputRow = contentEl.createDiv("khoj-input-row");
+    const chatInput = inputRow.createEl("input", {
       attr: {
         type: "text",
         id: "khoj-chat-input",
@@ -5885,46 +5886,110 @@ var KhojChatModal = class extends import_obsidian4.Modal {
         class: "khoj-chat-input option"
       }
     });
-    chatInput.addEventListener("change", (event) => {
-      this.result = event.target.value;
+    let transcribe = inputRow.createEl("button", {
+      text: "Transcribe",
+      attr: {
+        id: "khoj-transcribe",
+        class: "khoj-transcribe khoj-input-row-button"
+      }
     });
+    transcribe.addEventListener("click", async (_) => {
+      await this.speechToText();
+    });
+    (0, import_obsidian4.setIcon)(transcribe, "mic");
+    let clearChat = inputRow.createEl("button", {
+      text: "Clear History",
+      attr: {
+        class: "khoj-input-row-button"
+      }
+    });
+    clearChat.addEventListener("click", async (_) => {
+      await this.clearConversationHistory();
+    });
+    (0, import_obsidian4.setIcon)(clearChat, "trash");
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
     chatInput.focus();
   }
   generateReference(messageEl, reference, index) {
     let escaped_ref = reference.replace(/"/g, "&quot;");
-    return messageEl.createEl("sup").createEl("abbr", {
-      attr: {
-        title: escaped_ref,
-        tabindex: "0"
-      },
-      text: `[${index}] `
+    let short_ref = escaped_ref.slice(0, 100);
+    short_ref = short_ref.length < escaped_ref.length ? short_ref + "..." : short_ref;
+    let referenceButton = messageEl.createEl("button");
+    referenceButton.innerHTML = short_ref;
+    referenceButton.id = `ref-${index}`;
+    referenceButton.classList.add("reference-button");
+    referenceButton.classList.add("collapsed");
+    referenceButton.tabIndex = 0;
+    referenceButton.addEventListener("click", function() {
+      console.log(`Toggling ref-${index}`);
+      if (this.classList.contains("collapsed")) {
+        this.classList.remove("collapsed");
+        this.classList.add("expanded");
+        this.innerHTML = escaped_ref;
+      } else {
+        this.classList.add("collapsed");
+        this.classList.remove("expanded");
+        this.innerHTML = short_ref;
+      }
     });
+    return referenceButton;
   }
-  renderMessageWithReferences(message, sender, context, dt) {
-    let messageEl = this.renderMessage(message, sender, dt);
-    if (context && !!messageEl) {
-      context.map((reference, index) => this.generateReference(messageEl, reference, index + 1));
+  renderMessageWithReferences(chatEl, message, sender, context, dt) {
+    if (!message) {
+      return;
+    } else if (!context) {
+      this.renderMessage(chatEl, message, sender, dt);
+      return;
+    } else if (!!context && (context == null ? void 0 : context.length) === 0) {
+      this.renderMessage(chatEl, message, sender, dt);
+      return;
     }
+    let chatMessageEl = this.renderMessage(chatEl, message, sender, dt);
+    let chatMessageBodyEl = chatMessageEl.getElementsByClassName("khoj-chat-message-text")[0];
+    let references = chatMessageBodyEl.createDiv();
+    let referenceExpandButton = references.createEl("button");
+    referenceExpandButton.classList.add("reference-expand-button");
+    let numReferences = 0;
+    if (context) {
+      numReferences += context.length;
+    }
+    let referenceSection = references.createEl("div");
+    referenceSection.classList.add("reference-section");
+    referenceSection.classList.add("collapsed");
+    referenceExpandButton.addEventListener("click", function() {
+      if (referenceSection.classList.contains("collapsed")) {
+        referenceSection.classList.remove("collapsed");
+        referenceSection.classList.add("expanded");
+      } else {
+        referenceSection.classList.add("collapsed");
+        referenceSection.classList.remove("expanded");
+      }
+    });
+    references.classList.add("references");
+    if (context) {
+      context.map((reference, index) => {
+        this.generateReference(referenceSection, reference, index + 1);
+      });
+    }
+    let expandButtonText = numReferences == 1 ? "1 reference" : `${numReferences} references`;
+    referenceExpandButton.innerHTML = expandButtonText;
   }
-  renderMessage(message, sender, dt) {
+  renderMessage(chatEl, message, sender, dt) {
     let message_time = this.formatDate(dt != null ? dt : new Date());
     let emojified_sender = sender == "khoj" ? "\u{1F3EE} Khoj" : "\u{1F914} You";
-    let chat_body_el = this.contentEl.getElementsByClassName("khoj-chat-body")[0];
-    let chat_message_el = chat_body_el.createDiv({
+    let chatMessageEl = chatEl.createDiv({
       attr: {
         "data-meta": `${emojified_sender} at ${message_time}`,
         class: `khoj-chat-message ${sender}`
       }
-    }).createDiv({
-      attr: {
-        class: `khoj-chat-message-text ${sender}`
-      },
-      text: `${message}`
     });
-    chat_message_el.style.userSelect = "text";
+    let chat_message_body_el = chatMessageEl.createDiv();
+    chat_message_body_el.addClasses(["khoj-chat-message-text", sender]);
+    let chat_message_body_text_el = chat_message_body_el.createDiv();
+    import_obsidian4.MarkdownRenderer.renderMarkdown(message, chat_message_body_text_el, null, null);
+    chatMessageEl.style.userSelect = "text";
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
-    return chat_message_el;
+    return chatMessageEl;
   }
   createKhojResponseDiv(dt) {
     let message_time = this.formatDate(dt != null ? dt : new Date());
@@ -5943,7 +6008,9 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     return chat_message_el;
   }
   renderIncrementalMessage(htmlElement, additionalMessage) {
-    htmlElement.innerHTML += additionalMessage;
+    this.result += additionalMessage;
+    htmlElement.innerHTML = "";
+    import_obsidian4.MarkdownRenderer.renderMarkdown(this.result, htmlElement, null, null);
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
   }
   formatDate(date) {
@@ -5951,22 +6018,24 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let date_string = date.toLocaleString("en-IN", { year: "numeric", month: "short", day: "2-digit" }).replace(/-/g, " ");
     return `${time_string}, ${date_string}`;
   }
-  async getChatHistory() {
+  async getChatHistory(chatBodyEl) {
     let chatUrl = `${this.setting.khojUrl}/api/chat/history?client=obsidian`;
     let headers = { "Authorization": `Bearer ${this.setting.khojApiKey}` };
     let response = await (0, import_obsidian4.request)({ url: chatUrl, headers });
     let chatLogs = JSON.parse(response).response;
     chatLogs.forEach((chatLog) => {
-      this.renderMessageWithReferences(chatLog.message, chatLog.by, chatLog.context, new Date(chatLog.created));
+      this.renderMessageWithReferences(chatBodyEl, chatLog.message, chatLog.by, chatLog.context, new Date(chatLog.created));
     });
   }
   async getChatResponse(query) {
     if (!query || query === "")
       return;
-    this.renderMessage(query, "you");
+    let chatBodyEl = this.contentEl.getElementsByClassName("khoj-chat-body")[0];
+    this.renderMessage(chatBodyEl, query, "you");
     let encodedQuery = encodeURIComponent(query);
     let chatUrl = `${this.setting.khojUrl}/api/chat?q=${encodedQuery}&n=${this.setting.resultsCount}&client=obsidian&stream=true`;
     let responseElement = this.createKhojResponseDiv();
+    this.result = "";
     this.renderIncrementalMessage(responseElement, "\u{1F914}");
     let response = await fetch2(chatUrl, {
       method: "GET",
@@ -5983,15 +6052,140 @@ var KhojChatModal = class extends import_obsidian4.Modal {
       if (responseElement.innerHTML === "\u{1F914}") {
         responseElement.innerHTML = "";
       }
+      this.result = "";
+      responseElement.innerHTML = "";
       for await (const chunk of response.body) {
         const responseText = chunk.toString();
-        if (responseText.startsWith("### compiled references:")) {
-          return;
+        if (responseText.includes("### compiled references:")) {
+          const additionalResponse = responseText.split("### compiled references:")[0];
+          this.renderIncrementalMessage(responseElement, additionalResponse);
+          const rawReference = responseText.split("### compiled references:")[1];
+          const rawReferenceAsJson = JSON.parse(rawReference);
+          let references = responseElement.createDiv();
+          references.classList.add("references");
+          let referenceExpandButton = references.createEl("button");
+          referenceExpandButton.classList.add("reference-expand-button");
+          let referenceSection = references.createDiv();
+          referenceSection.classList.add("reference-section");
+          referenceSection.classList.add("collapsed");
+          let numReferences = 0;
+          if (Array.isArray(rawReferenceAsJson)) {
+            numReferences = rawReferenceAsJson.length;
+            rawReferenceAsJson.forEach((reference, index) => {
+              this.generateReference(referenceSection, reference, index);
+            });
+          }
+          references.appendChild(referenceExpandButton);
+          referenceExpandButton.addEventListener("click", function() {
+            if (referenceSection.classList.contains("collapsed")) {
+              referenceSection.classList.remove("collapsed");
+              referenceSection.classList.add("expanded");
+            } else {
+              referenceSection.classList.add("collapsed");
+              referenceSection.classList.remove("expanded");
+            }
+          });
+          let expandButtonText = numReferences == 1 ? "1 reference" : `${numReferences} references`;
+          referenceExpandButton.innerHTML = expandButtonText;
+          references.appendChild(referenceSection);
+        } else {
+          this.renderIncrementalMessage(responseElement, responseText);
         }
-        this.renderIncrementalMessage(responseElement, responseText);
       }
     } catch (err) {
       this.renderIncrementalMessage(responseElement, "Sorry, unable to get response from Khoj backend \u2764\uFE0F\u200D\u{1FA79}. Contact developer for help at team@khoj.dev or <a href='https://discord.gg/BDgyabRM6e'>in Discord</a>");
+    }
+  }
+  flashStatusInChatInput(message) {
+    let chatInput = this.contentEl.getElementsByClassName("khoj-chat-input")[0];
+    let originalPlaceholder = chatInput.placeholder;
+    chatInput.placeholder = message;
+    setTimeout(() => {
+      chatInput.placeholder = originalPlaceholder;
+    }, 2e3);
+  }
+  async clearConversationHistory() {
+    let chatBody = this.contentEl.getElementsByClassName("khoj-chat-body")[0];
+    let response = await (0, import_obsidian4.request)({
+      url: `${this.setting.khojUrl}/api/chat/history?client=web`,
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${this.setting.khojApiKey}` }
+    });
+    try {
+      let result = JSON.parse(response);
+      if (result.status !== "ok") {
+        throw new Error("Failed to clear conversation history");
+      } else {
+        chatBody.innerHTML = "";
+        await this.getChatHistory(chatBody);
+        this.flashStatusInChatInput(result.message);
+      }
+    } catch (err) {
+      this.flashStatusInChatInput("Failed to clear conversation history");
+    }
+  }
+  async speechToText() {
+    const transcribeButton = this.contentEl.getElementsByClassName("khoj-transcribe")[0];
+    const chatInput = this.contentEl.getElementsByClassName("khoj-chat-input")[0];
+    const generateRequestBody = async (audioBlob, boundary_string) => {
+      const boundary = `------${boundary_string}`;
+      const chunks = [];
+      chunks.push(new TextEncoder().encode(`${boundary}\r
+`));
+      chunks.push(new TextEncoder().encode(`Content-Disposition: form-data; name="file"; filename="blob"\r
+Content-Type: "application/octet-stream"\r
+\r
+`));
+      chunks.push(await audioBlob.arrayBuffer());
+      chunks.push(new TextEncoder().encode("\r\n"));
+      await Promise.all(chunks);
+      chunks.push(new TextEncoder().encode(`${boundary}--\r
+`));
+      return await new Blob(chunks).arrayBuffer();
+    };
+    const sendToServer = async (audioBlob) => {
+      const boundary_string = `Boundary${Math.random().toString(36).slice(2)}`;
+      const requestBody = await generateRequestBody(audioBlob, boundary_string);
+      const response = await (0, import_obsidian4.requestUrl)({
+        url: `${this.setting.khojUrl}/api/transcribe?client=obsidian`,
+        method: "POST",
+        headers: { "Authorization": `Bearer ${this.setting.khojApiKey}` },
+        contentType: `multipart/form-data; boundary=----${boundary_string}`,
+        body: requestBody
+      });
+      if (response.status === 200) {
+        console.log(response);
+        chatInput.value += response.json.text;
+      } else if (response.status === 422) {
+        throw new Error("\u26D4\uFE0F Failed to transcribe audio");
+      } else {
+        throw new Error("\u26D4\uFE0F Configure speech-to-text model on server.");
+      }
+    };
+    const handleRecording = (stream) => {
+      const audioChunks = [];
+      const recordingConfig = { mimeType: "audio/webm" };
+      this.mediaRecorder = new MediaRecorder(stream, recordingConfig);
+      this.mediaRecorder.addEventListener("dataavailable", function(event) {
+        if (event.data.size > 0)
+          audioChunks.push(event.data);
+      });
+      this.mediaRecorder.addEventListener("stop", async function() {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        await sendToServer(audioBlob);
+      });
+      this.mediaRecorder.start();
+      (0, import_obsidian4.setIcon)(transcribeButton, "mic-off");
+    };
+    if (!this.mediaRecorder || this.mediaRecorder.state === "inactive") {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(handleRecording).catch((e2) => {
+        this.flashStatusInChatInput("\u26D4\uFE0F Failed to access microphone");
+      });
+    } else if (this.mediaRecorder.state === "recording") {
+      this.mediaRecorder.stop();
+      this.mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+      this.mediaRecorder = void 0;
+      (0, import_obsidian4.setIcon)(transcribeButton, "mic");
     }
   }
 };

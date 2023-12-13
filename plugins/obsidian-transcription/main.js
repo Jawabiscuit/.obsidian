@@ -9,6 +9,9 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
@@ -27,9 +30,9 @@ var __copyProps = (to, from, except, desc) => {
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/requires-port/index.js
+// node_modules/.pnpm/requires-port@1.0.0/node_modules/requires-port/index.js
 var require_requires_port = __commonJS({
-  "node_modules/requires-port/index.js"(exports, module2) {
+  "node_modules/.pnpm/requires-port@1.0.0/node_modules/requires-port/index.js"(exports, module2) {
     "use strict";
     module2.exports = function required(port, protocol) {
       protocol = protocol.split(":")[0];
@@ -55,9 +58,9 @@ var require_requires_port = __commonJS({
   }
 });
 
-// node_modules/querystringify/index.js
+// node_modules/.pnpm/querystringify@2.2.0/node_modules/querystringify/index.js
 var require_querystringify = __commonJS({
-  "node_modules/querystringify/index.js"(exports) {
+  "node_modules/.pnpm/querystringify@2.2.0/node_modules/querystringify/index.js"(exports) {
     "use strict";
     var has = Object.prototype.hasOwnProperty;
     var undef;
@@ -110,9 +113,9 @@ var require_querystringify = __commonJS({
   }
 });
 
-// node_modules/url-parse/index.js
+// node_modules/.pnpm/url-parse@1.5.10/node_modules/url-parse/index.js
 var require_url_parse = __commonJS({
-  "node_modules/url-parse/index.js"(exports, module2) {
+  "node_modules/.pnpm/url-parse@1.5.10/node_modules/url-parse/index.js"(exports, module2) {
     "use strict";
     var required = require_requires_port();
     var qs = require_querystringify();
@@ -431,11 +434,20 @@ var require_url_parse = __commonJS({
   }
 });
 
-// node_modules/@supabase/node-fetch/browser.js
-var require_browser = __commonJS({
-  "node_modules/@supabase/node-fetch/browser.js"(exports, module2) {
+// node_modules/.pnpm/@supabase+node-fetch@2.6.15/node_modules/@supabase/node-fetch/browser.js
+var browser_exports2 = {};
+__export(browser_exports2, {
+  Headers: () => Headers2,
+  Request: () => Request2,
+  Response: () => Response3,
+  default: () => browser_default,
+  fetch: () => fetch2
+});
+var getGlobal, globalObject, fetch2, browser_default, Headers2, Request2, Response3;
+var init_browser = __esm({
+  "node_modules/.pnpm/@supabase+node-fetch@2.6.15/node_modules/@supabase/node-fetch/browser.js"() {
     "use strict";
-    var getGlobal = function() {
+    getGlobal = function() {
       if (typeof self !== "undefined") {
         return self;
       }
@@ -447,20 +459,18 @@ var require_browser = __commonJS({
       }
       throw new Error("unable to locate global object");
     };
-    var globalObject = getGlobal();
-    module2.exports = exports = globalObject.fetch;
-    if (globalObject.fetch) {
-      exports.default = globalObject.fetch.bind(globalObject);
-    }
-    exports.Headers = globalObject.Headers;
-    exports.Request = globalObject.Request;
-    exports.Response = globalObject.Response;
+    globalObject = getGlobal();
+    fetch2 = globalObject.fetch;
+    browser_default = globalObject.fetch.bind(globalObject);
+    Headers2 = globalObject.Headers;
+    Request2 = globalObject.Request;
+    Response3 = globalObject.Response;
   }
 });
 
-// node_modules/es5-ext/global.js
+// node_modules/.pnpm/es5-ext@0.10.62/node_modules/es5-ext/global.js
 var require_global = __commonJS({
-  "node_modules/es5-ext/global.js"(exports, module2) {
+  "node_modules/.pnpm/es5-ext@0.10.62/node_modules/es5-ext/global.js"(exports, module2) {
     var naiveFallback = function() {
       if (typeof self === "object" && self)
         return self;
@@ -494,9 +504,9 @@ var require_global = __commonJS({
   }
 });
 
-// node_modules/websocket/package.json
+// node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/package.json
 var require_package = __commonJS({
-  "node_modules/websocket/package.json"(exports, module2) {
+  "node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/package.json"(exports, module2) {
     module2.exports = {
       name: "websocket",
       description: "Websocket Client & Server Library implementing the WebSocket protocol as specified in RFC 6455.",
@@ -558,16 +568,16 @@ var require_package = __commonJS({
   }
 });
 
-// node_modules/websocket/lib/version.js
+// node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/lib/version.js
 var require_version = __commonJS({
-  "node_modules/websocket/lib/version.js"(exports, module2) {
+  "node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/lib/version.js"(exports, module2) {
     module2.exports = require_package().version;
   }
 });
 
-// node_modules/websocket/lib/browser.js
-var require_browser2 = __commonJS({
-  "node_modules/websocket/lib/browser.js"(exports, module2) {
+// node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/lib/browser.js
+var require_browser = __commonJS({
+  "node_modules/.pnpm/websocket@1.0.34/node_modules/websocket/lib/browser.js"(exports, module2) {
     var _globalThis;
     if (typeof globalThis === "object") {
       _globalThis = globalThis;
@@ -920,7 +930,7 @@ var TranscriptionSettingTab = class extends import_obsidian.PluginSettingTab {
 // src/transcribe.ts
 var import_obsidian3 = require("obsidian");
 
-// node_modules/@babel/runtime/helpers/esm/typeof.js
+// node_modules/.pnpm/@babel+runtime@7.23.4/node_modules/@babel/runtime/helpers/esm/typeof.js
 function _typeof(o) {
   "@babel/helpers - typeof";
   return _typeof = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(o2) {
@@ -930,7 +940,7 @@ function _typeof(o) {
   }, _typeof(o);
 }
 
-// node_modules/date-fns/esm/_lib/toInteger/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/toInteger/index.js
 function toInteger(dirtyNumber) {
   if (dirtyNumber === null || dirtyNumber === true || dirtyNumber === false) {
     return NaN;
@@ -942,14 +952,14 @@ function toInteger(dirtyNumber) {
   return number < 0 ? Math.ceil(number) : Math.floor(number);
 }
 
-// node_modules/date-fns/esm/_lib/requiredArgs/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/requiredArgs/index.js
 function requiredArgs(required, args) {
   if (args.length < required) {
     throw new TypeError(required + " argument" + (required > 1 ? "s" : "") + " required, but only " + args.length + " present");
   }
 }
 
-// node_modules/date-fns/esm/toDate/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/toDate/index.js
 function toDate(argument) {
   requiredArgs(1, arguments);
   var argStr = Object.prototype.toString.call(argument);
@@ -966,7 +976,7 @@ function toDate(argument) {
   }
 }
 
-// node_modules/date-fns/esm/addMilliseconds/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/addMilliseconds/index.js
 function addMilliseconds(dirtyDate, dirtyAmount) {
   requiredArgs(2, arguments);
   var timestamp = toDate(dirtyDate).getTime();
@@ -974,26 +984,26 @@ function addMilliseconds(dirtyDate, dirtyAmount) {
   return new Date(timestamp + amount);
 }
 
-// node_modules/date-fns/esm/_lib/defaultOptions/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/defaultOptions/index.js
 var defaultOptions = {};
 function getDefaultOptions() {
   return defaultOptions;
 }
 
-// node_modules/date-fns/esm/_lib/getTimezoneOffsetInMilliseconds/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getTimezoneOffsetInMilliseconds/index.js
 function getTimezoneOffsetInMilliseconds(date) {
   var utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
   utcDate.setUTCFullYear(date.getFullYear());
   return date.getTime() - utcDate.getTime();
 }
 
-// node_modules/date-fns/esm/isDate/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/isDate/index.js
 function isDate(value) {
   requiredArgs(1, arguments);
   return value instanceof Date || _typeof(value) === "object" && Object.prototype.toString.call(value) === "[object Date]";
 }
 
-// node_modules/date-fns/esm/isValid/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/isValid/index.js
 function isValid(dirtyDate) {
   requiredArgs(1, arguments);
   if (!isDate(dirtyDate) && typeof dirtyDate !== "number") {
@@ -1003,14 +1013,14 @@ function isValid(dirtyDate) {
   return !isNaN(Number(date));
 }
 
-// node_modules/date-fns/esm/subMilliseconds/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/subMilliseconds/index.js
 function subMilliseconds(dirtyDate, dirtyAmount) {
   requiredArgs(2, arguments);
   var amount = toInteger(dirtyAmount);
   return addMilliseconds(dirtyDate, -amount);
 }
 
-// node_modules/date-fns/esm/_lib/getUTCDayOfYear/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getUTCDayOfYear/index.js
 var MILLISECONDS_IN_DAY = 864e5;
 function getUTCDayOfYear(dirtyDate) {
   requiredArgs(1, arguments);
@@ -1023,7 +1033,7 @@ function getUTCDayOfYear(dirtyDate) {
   return Math.floor(difference / MILLISECONDS_IN_DAY) + 1;
 }
 
-// node_modules/date-fns/esm/_lib/startOfUTCISOWeek/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/startOfUTCISOWeek/index.js
 function startOfUTCISOWeek(dirtyDate) {
   requiredArgs(1, arguments);
   var weekStartsOn = 1;
@@ -1035,7 +1045,7 @@ function startOfUTCISOWeek(dirtyDate) {
   return date;
 }
 
-// node_modules/date-fns/esm/_lib/getUTCISOWeekYear/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getUTCISOWeekYear/index.js
 function getUTCISOWeekYear(dirtyDate) {
   requiredArgs(1, arguments);
   var date = toDate(dirtyDate);
@@ -1057,7 +1067,7 @@ function getUTCISOWeekYear(dirtyDate) {
   }
 }
 
-// node_modules/date-fns/esm/_lib/startOfUTCISOWeekYear/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/startOfUTCISOWeekYear/index.js
 function startOfUTCISOWeekYear(dirtyDate) {
   requiredArgs(1, arguments);
   var year = getUTCISOWeekYear(dirtyDate);
@@ -1068,7 +1078,7 @@ function startOfUTCISOWeekYear(dirtyDate) {
   return date;
 }
 
-// node_modules/date-fns/esm/_lib/getUTCISOWeek/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getUTCISOWeek/index.js
 var MILLISECONDS_IN_WEEK = 6048e5;
 function getUTCISOWeek(dirtyDate) {
   requiredArgs(1, arguments);
@@ -1077,7 +1087,7 @@ function getUTCISOWeek(dirtyDate) {
   return Math.round(diff / MILLISECONDS_IN_WEEK) + 1;
 }
 
-// node_modules/date-fns/esm/_lib/startOfUTCWeek/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/startOfUTCWeek/index.js
 function startOfUTCWeek(dirtyDate, options) {
   var _ref, _ref2, _ref3, _options$weekStartsOn, _options$locale, _options$locale$optio, _defaultOptions$local, _defaultOptions$local2;
   requiredArgs(1, arguments);
@@ -1094,7 +1104,7 @@ function startOfUTCWeek(dirtyDate, options) {
   return date;
 }
 
-// node_modules/date-fns/esm/_lib/getUTCWeekYear/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getUTCWeekYear/index.js
 function getUTCWeekYear(dirtyDate, options) {
   var _ref, _ref2, _ref3, _options$firstWeekCon, _options$locale, _options$locale$optio, _defaultOptions$local, _defaultOptions$local2;
   requiredArgs(1, arguments);
@@ -1122,7 +1132,7 @@ function getUTCWeekYear(dirtyDate, options) {
   }
 }
 
-// node_modules/date-fns/esm/_lib/startOfUTCWeekYear/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/startOfUTCWeekYear/index.js
 function startOfUTCWeekYear(dirtyDate, options) {
   var _ref, _ref2, _ref3, _options$firstWeekCon, _options$locale, _options$locale$optio, _defaultOptions$local, _defaultOptions$local2;
   requiredArgs(1, arguments);
@@ -1136,7 +1146,7 @@ function startOfUTCWeekYear(dirtyDate, options) {
   return date;
 }
 
-// node_modules/date-fns/esm/_lib/getUTCWeek/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/getUTCWeek/index.js
 var MILLISECONDS_IN_WEEK2 = 6048e5;
 function getUTCWeek(dirtyDate, options) {
   requiredArgs(1, arguments);
@@ -1145,7 +1155,7 @@ function getUTCWeek(dirtyDate, options) {
   return Math.round(diff / MILLISECONDS_IN_WEEK2) + 1;
 }
 
-// node_modules/date-fns/esm/_lib/addLeadingZeros/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/addLeadingZeros/index.js
 function addLeadingZeros(number, targetLength) {
   var sign = number < 0 ? "-" : "";
   var output = Math.abs(number).toString();
@@ -1155,7 +1165,7 @@ function addLeadingZeros(number, targetLength) {
   return sign + output;
 }
 
-// node_modules/date-fns/esm/_lib/format/lightFormatters/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/format/lightFormatters/index.js
 var formatters = {
   y: function y(date, token) {
     var signedYear = date.getUTCFullYear();
@@ -1205,7 +1215,7 @@ var formatters = {
 };
 var lightFormatters_default = formatters;
 
-// node_modules/date-fns/esm/_lib/format/formatters/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/format/formatters/index.js
 var dayPeriodEnum = {
   am: "am",
   pm: "pm",
@@ -1804,7 +1814,7 @@ function formatTimezone(offset, dirtyDelimiter) {
 }
 var formatters_default = formatters2;
 
-// node_modules/date-fns/esm/_lib/format/longFormatters/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/format/longFormatters/index.js
 var dateLongFormatter = function dateLongFormatter2(pattern, formatLong2) {
   switch (pattern) {
     case "P":
@@ -1886,7 +1896,7 @@ var longFormatters = {
 };
 var longFormatters_default = longFormatters;
 
-// node_modules/date-fns/esm/_lib/protectedTokens/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/protectedTokens/index.js
 var protectedDayOfYearTokens = ["D", "DD"];
 var protectedWeekYearTokens = ["YY", "YYYY"];
 function isProtectedDayOfYearToken(token) {
@@ -1907,7 +1917,7 @@ function throwProtectedError(token, format2, input) {
   }
 }
 
-// node_modules/date-fns/esm/locale/en-US/_lib/formatDistance/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/_lib/formatDistance/index.js
 var formatDistanceLocale = {
   lessThanXSeconds: {
     one: "less than a second",
@@ -1992,7 +2002,7 @@ var formatDistance = function formatDistance2(token, count, options) {
 };
 var formatDistance_default = formatDistance;
 
-// node_modules/date-fns/esm/locale/_lib/buildFormatLongFn/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/_lib/buildFormatLongFn/index.js
 function buildFormatLongFn(args) {
   return function() {
     var options = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
@@ -2002,7 +2012,7 @@ function buildFormatLongFn(args) {
   };
 }
 
-// node_modules/date-fns/esm/locale/en-US/_lib/formatLong/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/_lib/formatLong/index.js
 var dateFormats = {
   full: "EEEE, MMMM do, y",
   long: "MMMM do, y",
@@ -2037,7 +2047,7 @@ var formatLong = {
 };
 var formatLong_default = formatLong;
 
-// node_modules/date-fns/esm/locale/en-US/_lib/formatRelative/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/_lib/formatRelative/index.js
 var formatRelativeLocale = {
   lastWeek: "'last' eeee 'at' p",
   yesterday: "'yesterday at' p",
@@ -2051,7 +2061,7 @@ var formatRelative = function formatRelative2(token, _date, _baseDate, _options)
 };
 var formatRelative_default = formatRelative;
 
-// node_modules/date-fns/esm/locale/_lib/buildLocalizeFn/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/_lib/buildLocalizeFn/index.js
 function buildLocalizeFn(args) {
   return function(dirtyIndex, options) {
     var context = options !== null && options !== void 0 && options.context ? String(options.context) : "standalone";
@@ -2070,7 +2080,7 @@ function buildLocalizeFn(args) {
   };
 }
 
-// node_modules/date-fns/esm/locale/en-US/_lib/localize/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/_lib/localize/index.js
 var eraValues = {
   narrow: ["B", "A"],
   abbreviated: ["BC", "AD"],
@@ -2201,7 +2211,7 @@ var localize = {
 };
 var localize_default = localize;
 
-// node_modules/date-fns/esm/locale/_lib/buildMatchFn/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/_lib/buildMatchFn/index.js
 function buildMatchFn(args) {
   return function(string) {
     var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
@@ -2245,7 +2255,7 @@ function findIndex(array, predicate) {
   return void 0;
 }
 
-// node_modules/date-fns/esm/locale/_lib/buildMatchPatternFn/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/_lib/buildMatchPatternFn/index.js
 function buildMatchPatternFn(args) {
   return function(string) {
     var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
@@ -2266,7 +2276,7 @@ function buildMatchPatternFn(args) {
   };
 }
 
-// node_modules/date-fns/esm/locale/en-US/_lib/match/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/_lib/match/index.js
 var matchOrdinalNumberPattern = /^(\d+)(th|st|nd|rd)?/i;
 var parseOrdinalNumberPattern = /\d+/i;
 var matchEraPatterns = {
@@ -2364,7 +2374,7 @@ var match = {
 };
 var match_default = match;
 
-// node_modules/date-fns/esm/locale/en-US/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/locale/en-US/index.js
 var locale = {
   code: "en-US",
   formatDistance: formatDistance_default,
@@ -2379,10 +2389,10 @@ var locale = {
 };
 var en_US_default = locale;
 
-// node_modules/date-fns/esm/_lib/defaultLocale/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/_lib/defaultLocale/index.js
 var defaultLocale_default = en_US_default;
 
-// node_modules/date-fns/esm/format/index.js
+// node_modules/.pnpm/date-fns@2.30.0/node_modules/date-fns/esm/format/index.js
 var formattingTokensRegExp = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g;
 var longFormattingTokensRegExp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
 var escapedStringRegExp = /^'([^]*?)'?$/;
@@ -2494,7 +2504,7 @@ Content-Type: "application/octet-stream"\r
   return [await new Blob(chunks).arrayBuffer(), boundary_string];
 }
 
-// node_modules/js-base64/base64.mjs
+// node_modules/.pnpm/js-base64@3.7.5/node_modules/js-base64/base64.mjs
 var version = "3.7.5";
 var VERSION = version;
 var _hasatob = typeof atob === "function";
@@ -2651,10 +2661,10 @@ var gBase64 = {
   extendBuiltins
 };
 
-// node_modules/tus-js-client/lib.esm/upload.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/upload.js
 var import_url_parse = __toESM(require_url_parse());
 
-// node_modules/tus-js-client/lib.esm/error.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/error.js
 function _typeof2(obj) {
   "@babel/helpers - typeof";
   return _typeof2 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -2837,7 +2847,7 @@ var DetailedError = /* @__PURE__ */ function(_Error) {
 }(/* @__PURE__ */ _wrapNativeSuper(Error));
 var error_default = DetailedError;
 
-// node_modules/tus-js-client/lib.esm/logger.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/logger.js
 var isEnabled = false;
 function log(msg) {
   if (!isEnabled)
@@ -2845,7 +2855,7 @@ function log(msg) {
   console.log(msg);
 }
 
-// node_modules/tus-js-client/lib.esm/uuid.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/uuid.js
 function uuid() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c2) {
     var r = Math.random() * 16 | 0;
@@ -2854,7 +2864,7 @@ function uuid() {
   });
 }
 
-// node_modules/tus-js-client/lib.esm/upload.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/upload.js
 function _regeneratorRuntime() {
   "use strict";
   _regeneratorRuntime = function _regeneratorRuntime3() {
@@ -3959,7 +3969,7 @@ function splitSizeIntoParts(totalSize, partCount) {
 BaseUpload.defaultOptions = defaultOptions2;
 var upload_default = BaseUpload;
 
-// node_modules/tus-js-client/lib.esm/noopUrlStorage.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/noopUrlStorage.js
 function _typeof4(obj) {
   "@babel/helpers - typeof";
   return _typeof4 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4035,7 +4045,7 @@ var NoopUrlStorage = /* @__PURE__ */ function() {
   return NoopUrlStorage2;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/urlStorage.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/urlStorage.js
 function _typeof5(obj) {
   "@babel/helpers - typeof";
   return _typeof5 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4152,7 +4162,7 @@ var WebStorageUrlStorage = /* @__PURE__ */ function() {
   return WebStorageUrlStorage2;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/httpStack.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/httpStack.js
 function _typeof6(obj) {
   "@babel/helpers - typeof";
   return _typeof6 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4218,15 +4228,15 @@ var XHRHttpStack = /* @__PURE__ */ function() {
   return XHRHttpStack2;
 }();
 var Request = /* @__PURE__ */ function() {
-  function Request2(method, url) {
-    _classCallCheck5(this, Request2);
+  function Request3(method, url) {
+    _classCallCheck5(this, Request3);
     this._xhr = new XMLHttpRequest();
     this._xhr.open(method, url, true);
     this._method = method;
     this._url = url;
     this._headers = {};
   }
-  _createClass5(Request2, [{
+  _createClass5(Request3, [{
     key: "getMethod",
     value: function getMethod() {
       return this._method;
@@ -4287,14 +4297,14 @@ var Request = /* @__PURE__ */ function() {
       return this._xhr;
     }
   }]);
-  return Request2;
+  return Request3;
 }();
 var Response2 = /* @__PURE__ */ function() {
-  function Response3(xhr) {
-    _classCallCheck5(this, Response3);
+  function Response4(xhr) {
+    _classCallCheck5(this, Response4);
     this._xhr = xhr;
   }
-  _createClass5(Response3, [{
+  _createClass5(Response4, [{
     key: "getStatus",
     value: function getStatus() {
       return this._xhr.status;
@@ -4315,16 +4325,16 @@ var Response2 = /* @__PURE__ */ function() {
       return this._xhr;
     }
   }]);
-  return Response3;
+  return Response4;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/isReactNative.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/isReactNative.js
 var isReactNative = function isReactNative2() {
   return typeof navigator !== "undefined" && typeof navigator.product === "string" && navigator.product.toLowerCase() === "reactnative";
 };
 var isReactNative_default = isReactNative;
 
-// node_modules/tus-js-client/lib.esm/browser/uriToBlob.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/uriToBlob.js
 function uriToBlob(uri) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
@@ -4341,13 +4351,13 @@ function uriToBlob(uri) {
   });
 }
 
-// node_modules/tus-js-client/lib.esm/browser/sources/isCordova.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/sources/isCordova.js
 var isCordova = function isCordova2() {
   return typeof window !== "undefined" && (typeof window.PhoneGap !== "undefined" || typeof window.Cordova !== "undefined" || typeof window.cordova !== "undefined");
 };
 var isCordova_default = isCordova;
 
-// node_modules/tus-js-client/lib.esm/browser/sources/readAsByteArray.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/sources/readAsByteArray.js
 function readAsByteArray(chunk) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
@@ -4364,7 +4374,7 @@ function readAsByteArray(chunk) {
   });
 }
 
-// node_modules/tus-js-client/lib.esm/browser/sources/FileSource.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/sources/FileSource.js
 function _typeof7(obj) {
   "@babel/helpers - typeof";
   return _typeof7 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4439,7 +4449,7 @@ var FileSource = /* @__PURE__ */ function() {
   return FileSource2;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/sources/StreamSource.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/sources/StreamSource.js
 function _typeof8(obj) {
   "@babel/helpers - typeof";
   return _typeof8 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4576,7 +4586,7 @@ var StreamSource = /* @__PURE__ */ function() {
   return StreamSource2;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/fileReader.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/fileReader.js
 function _typeof9(obj) {
   "@babel/helpers - typeof";
   return _typeof9 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -4984,7 +4994,7 @@ var FileReader2 = /* @__PURE__ */ function() {
   return FileReader3;
 }();
 
-// node_modules/tus-js-client/lib.esm/browser/fileSignature.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/fileSignature.js
 function fingerprint(file, options) {
   if (isReactNative_default()) {
     return Promise.resolve(reactNativeFingerprint(file, options));
@@ -5008,7 +5018,7 @@ function hashCode(str) {
   return hash;
 }
 
-// node_modules/tus-js-client/lib.esm/browser/index.js
+// node_modules/.pnpm/tus-js-client@3.1.1/node_modules/tus-js-client/lib.esm/browser/index.js
 function _typeof10(obj) {
   "@babel/helpers - typeof";
   return _typeof10 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -5267,7 +5277,7 @@ var TranscriptionEngine = class {
     const fileStream = await this.vault.readBinary(file);
     const filename = file.name.replace(/[^a-zA-Z0-9.]+/g, "-");
     let uploadProgressNotice = null;
-    const uploadPromise = new Promise((resolve, reject) => {
+    const uploadPromise = new Promise((resolve) => {
       const upload = new Upload(new Blob([fileStream]), {
         endpoint: `https://auth.swiftink.io/storage/v1/upload/resumable`,
         retryDelays: [0, 3e3, 5e3, 1e4, 2e4],
@@ -5312,13 +5322,16 @@ var TranscriptionEngine = class {
       if (this.settings.debug) {
         console.log("Failed to upload to Swiftink: ", error);
       }
-      return Promise.reject(error);
+      return Promise.reject(new import_obsidian3.Notice(`Failed to upload ${filename} to Swiftink`));
     }
     let transcriptionProgressNotice = null;
     const fileUrl = `https://auth.swiftink.io/storage/v1/object/public/swiftink-upload/${id}/${filename}`;
     const url = `${api_base}/transcripts/`;
     const headers = { Authorization: `Bearer ${token}` };
-    const body = { name: filename, url: fileUrl };
+    const body = {
+      name: filename,
+      url: fileUrl
+    };
     if (this.settings.language != "auto")
       body.language = this.settings.language;
     if (this.settings.debug)
@@ -5504,20 +5517,20 @@ var StatusBarMessage = class {
   }
 };
 
-// node_modules/@supabase/functions-js/dist/module/helper.js
+// node_modules/.pnpm/@supabase+functions-js@2.1.5/node_modules/@supabase/functions-js/dist/module/helper.js
 var resolveFetch = (customFetch) => {
   let _fetch;
   if (customFetch) {
     _fetch = customFetch;
   } else if (typeof fetch === "undefined") {
-    _fetch = (...args) => Promise.resolve().then(() => __toESM(require_browser())).then(({ default: fetch2 }) => fetch2(...args));
+    _fetch = (...args) => Promise.resolve().then(() => (init_browser(), browser_exports2)).then(({ default: fetch3 }) => fetch3(...args));
   } else {
     _fetch = fetch;
   }
   return (...args) => _fetch(...args);
 };
 
-// node_modules/@supabase/functions-js/dist/module/types.js
+// node_modules/.pnpm/@supabase+functions-js@2.1.5/node_modules/@supabase/functions-js/dist/module/types.js
 var FunctionsError = class extends Error {
   constructor(message, name = "FunctionsError", context) {
     super(message);
@@ -5541,7 +5554,7 @@ var FunctionsHttpError = class extends FunctionsError {
   }
 };
 
-// node_modules/@supabase/functions-js/dist/module/FunctionsClient.js
+// node_modules/.pnpm/@supabase+functions-js@2.1.5/node_modules/@supabase/functions-js/dist/module/FunctionsClient.js
 var __awaiter = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -5632,8 +5645,8 @@ var FunctionsClient = class {
   }
 };
 
-// node_modules/@supabase/postgrest-js/dist/module/PostgrestBuilder.js
-var import_node_fetch = __toESM(require_browser());
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/PostgrestBuilder.js
+init_browser();
 var PostgrestBuilder = class {
   constructor(builder) {
     this.shouldThrowOnError = false;
@@ -5648,7 +5661,7 @@ var PostgrestBuilder = class {
     if (builder.fetch) {
       this.fetch = builder.fetch;
     } else if (typeof fetch === "undefined") {
-      this.fetch = import_node_fetch.default;
+      this.fetch = browser_default;
     } else {
       this.fetch = fetch;
     }
@@ -5774,7 +5787,7 @@ var PostgrestBuilder = class {
   }
 };
 
-// node_modules/@supabase/postgrest-js/dist/module/PostgrestTransformBuilder.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/PostgrestTransformBuilder.js
 var PostgrestTransformBuilder = class extends PostgrestBuilder {
   select(columns) {
     let quoted = false;
@@ -5867,7 +5880,7 @@ var PostgrestTransformBuilder = class extends PostgrestBuilder {
   }
 };
 
-// node_modules/@supabase/postgrest-js/dist/module/PostgrestFilterBuilder.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/PostgrestFilterBuilder.js
 var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
   eq(column, value) {
     this.url.searchParams.append(column, `eq.${value}`);
@@ -6013,13 +6026,13 @@ var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
   }
 };
 
-// node_modules/@supabase/postgrest-js/dist/module/PostgrestQueryBuilder.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/PostgrestQueryBuilder.js
 var PostgrestQueryBuilder = class {
-  constructor(url, { headers = {}, schema, fetch: fetch2 }) {
+  constructor(url, { headers = {}, schema, fetch: fetch3 }) {
     this.url = url;
     this.headers = headers;
     this.schema = schema;
-    this.fetch = fetch2;
+    this.fetch = fetch3;
   }
   select(columns, { head = false, count } = {}) {
     const method = head ? "HEAD" : "GET";
@@ -6149,19 +6162,19 @@ var PostgrestQueryBuilder = class {
   }
 };
 
-// node_modules/@supabase/postgrest-js/dist/module/version.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/version.js
 var version2 = "1.9.0";
 
-// node_modules/@supabase/postgrest-js/dist/module/constants.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/constants.js
 var DEFAULT_HEADERS = { "X-Client-Info": `postgrest-js/${version2}` };
 
-// node_modules/@supabase/postgrest-js/dist/module/PostgrestClient.js
+// node_modules/.pnpm/@supabase+postgrest-js@1.9.0/node_modules/@supabase/postgrest-js/dist/module/PostgrestClient.js
 var PostgrestClient = class {
-  constructor(url, { headers = {}, schema, fetch: fetch2 } = {}) {
+  constructor(url, { headers = {}, schema, fetch: fetch3 } = {}) {
     this.url = url;
     this.headers = Object.assign(Object.assign({}, DEFAULT_HEADERS), headers);
     this.schemaName = schema;
-    this.fetch = fetch2;
+    this.fetch = fetch3;
   }
   from(relation) {
     const url = new URL(`${this.url}/${relation}`);
@@ -6207,13 +6220,13 @@ var PostgrestClient = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js
-var import_websocket = __toESM(require_browser2());
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js
+var import_websocket = __toESM(require_browser());
 
-// node_modules/@supabase/realtime-js/dist/module/lib/version.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/version.js
 var version3 = "2.8.4";
 
-// node_modules/@supabase/realtime-js/dist/module/lib/constants.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/constants.js
 var DEFAULT_HEADERS2 = { "X-Client-Info": `realtime-js/${version3}` };
 var VSN = "1.0.0";
 var DEFAULT_TIMEOUT = 1e4;
@@ -6254,7 +6267,7 @@ var CONNECTION_STATE;
   CONNECTION_STATE2["Closed"] = "closed";
 })(CONNECTION_STATE || (CONNECTION_STATE = {}));
 
-// node_modules/@supabase/realtime-js/dist/module/lib/timer.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/timer.js
 var Timer = class {
   constructor(callback, timerCalc) {
     this.callback = callback;
@@ -6277,7 +6290,7 @@ var Timer = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/lib/serializer.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/serializer.js
 var Serializer = class {
   constructor() {
     this.HEADER_LENGTH = 1;
@@ -6309,7 +6322,7 @@ var Serializer = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/lib/push.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/push.js
 var Push = class {
   constructor(channel, event, payload = {}, timeout = DEFAULT_TIMEOUT) {
     this.channel = channel;
@@ -6400,7 +6413,7 @@ var Push = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js
 var REALTIME_PRESENCE_LISTEN_EVENTS;
 (function(REALTIME_PRESENCE_LISTEN_EVENTS2) {
   REALTIME_PRESENCE_LISTEN_EVENTS2["SYNC"] = "sync";
@@ -6567,7 +6580,7 @@ var RealtimePresence = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/lib/transformers.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/lib/transformers.js
 var PostgresTypes;
 (function(PostgresTypes2) {
   PostgresTypes2["abstime"] = "abstime";
@@ -6710,7 +6723,7 @@ var toTimestampString = (value) => {
   return value;
 };
 
-// node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js
 var REALTIME_POSTGRES_CHANGES_LISTEN_EVENT;
 (function(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT2) {
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT2["ALL"] = "*";
@@ -7102,7 +7115,7 @@ var RealtimeChannel = class {
   }
 };
 
-// node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js
+// node_modules/.pnpm/@supabase+realtime-js@2.8.4/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js
 var noop2 = () => {
 };
 var RealtimeClient = class {
@@ -7134,7 +7147,7 @@ var RealtimeClient = class {
       if (customFetch) {
         _fetch = customFetch;
       } else if (typeof fetch === "undefined") {
-        _fetch = (...args) => Promise.resolve().then(() => __toESM(require_browser())).then(({ default: fetch2 }) => fetch2(...args));
+        _fetch = (...args) => Promise.resolve().then(() => (init_browser(), browser_exports2)).then(({ default: fetch3 }) => fetch3(...args));
       } else {
         _fetch = fetch;
       }
@@ -7350,7 +7363,7 @@ var RealtimeClient = class {
   }
 };
 
-// node_modules/@supabase/storage-js/dist/module/lib/errors.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/lib/errors.js
 var StorageError = class extends Error {
   constructor(message) {
     super(message);
@@ -7383,7 +7396,7 @@ var StorageUnknownError = class extends StorageError {
   }
 };
 
-// node_modules/@supabase/storage-js/dist/module/lib/helpers.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/lib/helpers.js
 var __awaiter2 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -7416,7 +7429,7 @@ var resolveFetch2 = (customFetch) => {
   if (customFetch) {
     _fetch = customFetch;
   } else if (typeof fetch === "undefined") {
-    _fetch = (...args) => Promise.resolve().then(() => __toESM(require_browser())).then(({ default: fetch2 }) => fetch2(...args));
+    _fetch = (...args) => Promise.resolve().then(() => (init_browser(), browser_exports2)).then(({ default: fetch3 }) => fetch3(...args));
   } else {
     _fetch = fetch;
   }
@@ -7424,12 +7437,12 @@ var resolveFetch2 = (customFetch) => {
 };
 var resolveResponse = () => __awaiter2(void 0, void 0, void 0, function* () {
   if (typeof Response === "undefined") {
-    return (yield Promise.resolve().then(() => __toESM(require_browser()))).Response;
+    return (yield Promise.resolve().then(() => (init_browser(), browser_exports2))).Response;
   }
   return Response;
 });
 
-// node_modules/@supabase/storage-js/dist/module/lib/fetch.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/lib/fetch.js
 var __awaiter3 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -7513,7 +7526,7 @@ function remove(fetcher, url, body, options, parameters) {
   });
 }
 
-// node_modules/@supabase/storage-js/dist/module/packages/StorageFileApi.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/packages/StorageFileApi.js
 var __awaiter4 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -7555,11 +7568,11 @@ var DEFAULT_FILE_OPTIONS = {
   upsert: false
 };
 var StorageFileApi = class {
-  constructor(url, headers = {}, bucketId, fetch2) {
+  constructor(url, headers = {}, bucketId, fetch3) {
     this.url = url;
     this.headers = headers;
     this.bucketId = bucketId;
-    this.fetch = resolveFetch2(fetch2);
+    this.fetch = resolveFetch2(fetch3);
   }
   uploadOrUpdate(method, path, fileBody, fileOptions) {
     return __awaiter4(this, void 0, void 0, function* () {
@@ -7829,13 +7842,13 @@ var StorageFileApi = class {
   }
 };
 
-// node_modules/@supabase/storage-js/dist/module/lib/version.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/lib/version.js
 var version4 = "2.5.4";
 
-// node_modules/@supabase/storage-js/dist/module/lib/constants.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/lib/constants.js
 var DEFAULT_HEADERS3 = { "X-Client-Info": `storage-js/${version4}` };
 
-// node_modules/@supabase/storage-js/dist/module/packages/StorageBucketApi.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/packages/StorageBucketApi.js
 var __awaiter5 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -7864,10 +7877,10 @@ var __awaiter5 = function(thisArg, _arguments, P, generator) {
   });
 };
 var StorageBucketApi = class {
-  constructor(url, headers = {}, fetch2) {
+  constructor(url, headers = {}, fetch3) {
     this.url = url;
     this.headers = Object.assign(Object.assign({}, DEFAULT_HEADERS3), headers);
-    this.fetch = resolveFetch2(fetch2);
+    this.fetch = resolveFetch2(fetch3);
   }
   listBuckets() {
     return __awaiter5(this, void 0, void 0, function* () {
@@ -7963,20 +7976,20 @@ var StorageBucketApi = class {
   }
 };
 
-// node_modules/@supabase/storage-js/dist/module/StorageClient.js
+// node_modules/.pnpm/@supabase+storage-js@2.5.4/node_modules/@supabase/storage-js/dist/module/StorageClient.js
 var StorageClient = class extends StorageBucketApi {
-  constructor(url, headers = {}, fetch2) {
-    super(url, headers, fetch2);
+  constructor(url, headers = {}, fetch3) {
+    super(url, headers, fetch3);
   }
   from(id) {
     return new StorageFileApi(this.url, this.headers, id, this.fetch);
   }
 };
 
-// node_modules/@supabase/supabase-js/dist/module/lib/version.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/lib/version.js
 var version5 = "2.38.5";
 
-// node_modules/@supabase/supabase-js/dist/module/lib/constants.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/lib/constants.js
 var JS_ENV = "";
 if (typeof Deno !== "undefined") {
   JS_ENV = "deno";
@@ -7989,8 +8002,8 @@ if (typeof Deno !== "undefined") {
 }
 var DEFAULT_HEADERS4 = { "X-Client-Info": `supabase-js-${JS_ENV}/${version5}` };
 
-// node_modules/@supabase/supabase-js/dist/module/lib/fetch.js
-var import_node_fetch2 = __toESM(require_browser());
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/lib/fetch.js
+init_browser();
 var __awaiter6 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -8023,7 +8036,7 @@ var resolveFetch3 = (customFetch) => {
   if (customFetch) {
     _fetch = customFetch;
   } else if (typeof fetch === "undefined") {
-    _fetch = import_node_fetch2.default;
+    _fetch = browser_default;
   } else {
     _fetch = fetch;
   }
@@ -8031,12 +8044,12 @@ var resolveFetch3 = (customFetch) => {
 };
 var resolveHeadersConstructor = () => {
   if (typeof Headers === "undefined") {
-    return import_node_fetch2.Headers;
+    return Headers2;
   }
   return Headers;
 };
 var fetchWithAuth = (supabaseKey, getAccessToken, customFetch) => {
-  const fetch2 = resolveFetch3(customFetch);
+  const fetch3 = resolveFetch3(customFetch);
   const HeadersConstructor = resolveHeadersConstructor();
   return (input, init) => __awaiter6(void 0, void 0, void 0, function* () {
     var _a;
@@ -8048,11 +8061,11 @@ var fetchWithAuth = (supabaseKey, getAccessToken, customFetch) => {
     if (!headers.has("Authorization")) {
       headers.set("Authorization", `Bearer ${accessToken}`);
     }
-    return fetch2(input, Object.assign(Object.assign({}, init), { headers }));
+    return fetch3(input, Object.assign(Object.assign({}, init), { headers }));
   });
 };
 
-// node_modules/@supabase/supabase-js/dist/module/lib/helpers.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/lib/helpers.js
 function stripTrailingSlash(url) {
   return url.replace(/\/$/, "");
 }
@@ -8067,7 +8080,7 @@ function applySettingDefaults(options, defaults) {
   };
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/helpers.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/helpers.js
 function expiresAt(expiresIn) {
   const timeNow = Math.round(Date.now() / 1e3);
   return timeNow + expiresIn;
@@ -8131,7 +8144,7 @@ var resolveFetch4 = (customFetch) => {
   if (customFetch) {
     _fetch = customFetch;
   } else if (typeof fetch === "undefined") {
-    _fetch = (...args) => Promise.resolve().then(() => __toESM(require_browser())).then(({ default: fetch2 }) => fetch2(...args));
+    _fetch = (...args) => Promise.resolve().then(() => (init_browser(), browser_exports2)).then(({ default: fetch3 }) => fetch3(...args));
   } else {
     _fetch = fetch;
   }
@@ -8270,7 +8283,7 @@ async function generatePKCEChallenge(verifier) {
   return base64urlencode(hashed);
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/errors.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/errors.js
 var AuthError = class extends Error {
   constructor(message, status) {
     super(message);
@@ -8374,7 +8387,7 @@ function isAuthRetryableFetchError(error) {
   return isAuthError(error) && error.name === "AuthRetryableFetchError";
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/fetch.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/fetch.js
 var __rest = function(s3, e2) {
   var t2 = {};
   for (var p in s3)
@@ -8493,7 +8506,7 @@ function hasSession(data) {
   return data.access_token && data.refresh_token && data.expires_in;
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/GoTrueAdminApi.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/GoTrueAdminApi.js
 var __rest2 = function(s3, e2) {
   var t2 = {};
   for (var p in s3)
@@ -8507,10 +8520,10 @@ var __rest2 = function(s3, e2) {
   return t2;
 };
 var GoTrueAdminApi = class {
-  constructor({ url = "", headers = {}, fetch: fetch2 }) {
+  constructor({ url = "", headers = {}, fetch: fetch3 }) {
     this.url = url;
     this.headers = headers;
-    this.fetch = resolveFetch4(fetch2);
+    this.fetch = resolveFetch4(fetch3);
     this.mfa = {
       listFactors: this._listFactors.bind(this),
       deleteFactor: this._deleteFactor.bind(this)
@@ -8695,16 +8708,16 @@ var GoTrueAdminApi = class {
   }
 };
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/version.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/version.js
 var version6 = "2.57.0";
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/constants.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/constants.js
 var GOTRUE_URL = "http://localhost:9999";
 var STORAGE_KEY = "supabase.auth.token";
 var DEFAULT_HEADERS5 = { "X-Client-Info": `gotrue-js/${version6}` };
 var EXPIRY_MARGIN = 10;
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/local-storage.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/local-storage.js
 var localStorageAdapter = {
   getItem: (key) => {
     if (!supportsLocalStorage()) {
@@ -8739,7 +8752,7 @@ function memoryLocalStorageAdapter(store = {}) {
   };
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/polyfills.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/polyfills.js
 function polyfillGlobalThis() {
   if (typeof globalThis === "object")
     return;
@@ -8759,7 +8772,7 @@ function polyfillGlobalThis() {
   }
 }
 
-// node_modules/@supabase/gotrue-js/dist/module/lib/locks.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/lib/locks.js
 var internals = {
   debug: !!(globalThis && supportsLocalStorage() && globalThis.localStorage && globalThis.localStorage.getItem("supabase.gotrue-js.locks.debug") === "true")
 };
@@ -8770,7 +8783,7 @@ var LockAcquireTimeoutError = class extends Error {
   }
 };
 
-// node_modules/@supabase/gotrue-js/dist/module/GoTrueClient.js
+// node_modules/.pnpm/@supabase+gotrue-js@2.57.0/node_modules/@supabase/gotrue-js/dist/module/GoTrueClient.js
 polyfillGlobalThis();
 var DEFAULT_OPTIONS = {
   url: GOTRUE_URL,
@@ -10176,14 +10189,14 @@ var GoTrueClient = class {
 };
 GoTrueClient.nextInstanceID = 0;
 
-// node_modules/@supabase/supabase-js/dist/module/lib/SupabaseAuthClient.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/lib/SupabaseAuthClient.js
 var SupabaseAuthClient = class extends GoTrueClient {
   constructor(options) {
     super(options);
   }
 };
 
-// node_modules/@supabase/supabase-js/dist/module/SupabaseClient.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/SupabaseClient.js
 var __awaiter7 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
@@ -10295,7 +10308,7 @@ var SupabaseClient = class {
       return (_b = (_a = data.session) === null || _a === void 0 ? void 0 : _a.access_token) !== null && _b !== void 0 ? _b : null;
     });
   }
-  _initSupabaseAuthClient({ autoRefreshToken, persistSession, detectSessionInUrl, storage, storageKey, flowType, debug }, headers, fetch2) {
+  _initSupabaseAuthClient({ autoRefreshToken, persistSession, detectSessionInUrl, storage, storageKey, flowType, debug }, headers, fetch3) {
     const authHeaders = {
       Authorization: `Bearer ${this.supabaseKey}`,
       apikey: `${this.supabaseKey}`
@@ -10310,7 +10323,7 @@ var SupabaseClient = class {
       storage,
       flowType,
       debug,
-      fetch: fetch2
+      fetch: fetch3
     });
   }
   _initRealtimeClient(options) {
@@ -10335,7 +10348,7 @@ var SupabaseClient = class {
   }
 };
 
-// node_modules/@supabase/supabase-js/dist/module/index.js
+// node_modules/.pnpm/@supabase+supabase-js@2.38.5/node_modules/@supabase/supabase-js/dist/module/index.js
 var createClient = (supabaseUrl, supabaseKey, options) => {
   return new SupabaseClient(supabaseUrl, supabaseKey, options);
 };
@@ -10375,8 +10388,19 @@ var _Transcription = class extends import_obsidian4.Plugin {
             return res.data.user || null;
           });
         }
-        if (this.user == null)
-          new import_obsidian4.Notice("Transcription: Please sign in to Swiftink.io via the settings tab", 4e3);
+        if (this.user == null) {
+          const noticeContent = document.createDocumentFragment();
+          const textNode = document.createTextNode("Transcription: You are signed out. Please ");
+          const signInLink = document.createElement("a");
+          signInLink.target = "_blank";
+          signInLink.textContent = "Sign In";
+          noticeContent.appendChild(textNode);
+          noticeContent.appendChild(signInLink);
+          const notice = new import_obsidian4.Notice(noticeContent, 16 * 1e3);
+          notice.noticeEl.addEventListener("click", () => {
+            window.open(SWIFTINK_AUTH_CALLBACK, "_blank");
+          });
+        }
       }
     }
     if (!import_obsidian4.Platform.isMobileApp) {
