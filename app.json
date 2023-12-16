@@ -18,5 +18,10 @@
   "readableLineLength": false,
   "showIndentGuide": false,
   "spellcheck": true,
-  "propertiesInDocument": "hidden"
+  "propertiesInDocument": "hidden",
+  "userIgnoreFilters": [
+    "node_modules/",
+    "org/",
+    "_scratch/"
+  ]
 }
