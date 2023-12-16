@@ -1,0 +1,69 @@
+.better-plugins-page-plugin-setting-tab {
+	padding-top: 20px;
+
+	.hidden-plugins-setting {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.hidden-plugins-setting textarea {
+		margin-top: 10px;
+		min-width: 100%;
+		max-width: 100%;
+		width: 100%;
+		min-height: 200px;
+	}
+}
+
+/* Hide community items with the specified class */
+.better-plugins-page-hidden-community-item {
+	opacity: 0.4;
+}
+
+/* Hide the button by default */
+.community-item button {
+	display: none !important;
+}
+
+/* Show the button when hovering over the card */
+.community-item:hover button {
+	/* You can style the button as needed */
+	/* For example, you can set its position to the top right corner */
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+
+.community-item.better-plugins-page-hidden-community-item:hover
+	button.show-button {
+	display: block !important;
+}
+
+.community-item:hover:not(.better-plugins-page-hidden-community-item):not(
+		[data-installed="true"]
+	)
+	button.hide-button {
+	display: block !important;
+}
+
+.better-plugin-page-download-count-filtered {
+	display: none;
+}
+
+.better-plugins-page-plugin-setting-button-group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+/* Add margin to create a 10px gap between flex items */
+.better-plugins-page-plugin-setting-button-group > * {
+	margin-right: 10px; /* Adjust as needed */
+}
+
+/* Remove the margin from the last item to prevent extra spacing */
+.better-plugins-page-plugin-setting-button-group > :last-child {
+	margin-right: 0;
+}

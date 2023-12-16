@@ -19,5 +19,11 @@
   "obsidian-kanban",
   "obsidian-advanced-uri",
   "obsidian-linter",
-  "chatgpt-md"
+  "chatgpt-md",
+  "better-plugins-page",
+  "obsidian-minimal-settings",
+  "settings-search",
+  "obsidian-front-matter-title-plugin",
+  "copilot-auto-completion",
+  "hide-folders"
 ]
