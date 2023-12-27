@@ -5875,15 +5875,17 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     contentEl.addClass("khoj-chat");
     contentEl.createEl("h1", { attr: { id: "khoj-chat-title" }, text: "Khoj Chat" });
     let chatBodyEl = contentEl.createDiv({ attr: { id: "khoj-chat-body", class: "khoj-chat-body" } });
-    await this.getChatHistory(chatBodyEl);
+    let getChatHistorySucessfully = await this.getChatHistory(chatBodyEl);
+    let placeholderText = getChatHistorySucessfully ? "Chat with Khoj [Hit Enter to send message]" : "Configure Khoj to enable chat";
     let inputRow = contentEl.createDiv("khoj-input-row");
-    const chatInput = inputRow.createEl("input", {
+    let chatInput = inputRow.createEl("input", {
       attr: {
         type: "text",
         id: "khoj-chat-input",
         autofocus: "autofocus",
-        placeholder: "Chat with Khoj [Hit Enter to send message]",
-        class: "khoj-chat-input option"
+        placeholder: placeholderText,
+        class: "khoj-chat-input option",
+        disabled: !getChatHistorySucessfully ? "disabled" : null
       }
     });
     let transcribe = inputRow.createEl("button", {
@@ -5915,7 +5917,7 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let short_ref = escaped_ref.slice(0, 100);
     short_ref = short_ref.length < escaped_ref.length ? short_ref + "..." : short_ref;
     let referenceButton = messageEl.createEl("button");
-    referenceButton.innerHTML = short_ref;
+    referenceButton.textContent = short_ref;
     referenceButton.id = `ref-${index}`;
     referenceButton.classList.add("reference-button");
     referenceButton.classList.add("collapsed");
@@ -5925,17 +5927,21 @@ var KhojChatModal = class extends import_obsidian4.Modal {
       if (this.classList.contains("collapsed")) {
         this.classList.remove("collapsed");
         this.classList.add("expanded");
-        this.innerHTML = escaped_ref;
+        this.textContent = escaped_ref;
       } else {
         this.classList.add("collapsed");
         this.classList.remove("expanded");
-        this.innerHTML = short_ref;
+        this.textContent = short_ref;
       }
     });
     return referenceButton;
   }
-  renderMessageWithReferences(chatEl, message, sender, context, dt) {
+  renderMessageWithReferences(chatEl, message, sender, context, dt, intentType) {
     if (!message) {
+      return;
+    } else if (intentType === "text-to-image") {
+      let imageMarkdown = `![](data:image/png;base64,${message})`;
+      this.renderMessage(chatEl, imageMarkdown, sender, dt);
       return;
     } else if (!context) {
       this.renderMessage(chatEl, message, sender, dt);
@@ -5974,7 +5980,7 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let expandButtonText = numReferences == 1 ? "1 reference" : `${numReferences} references`;
     referenceExpandButton.innerHTML = expandButtonText;
   }
-  renderMessage(chatEl, message, sender, dt) {
+  renderMessage(chatEl, message, sender, dt, raw = false) {
     let message_time = this.formatDate(dt != null ? dt : new Date());
     let emojified_sender = sender == "khoj" ? "\u{1F3EE} Khoj" : "\u{1F914} You";
     let chatMessageEl = chatEl.createDiv({
@@ -5986,7 +5992,11 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let chat_message_body_el = chatMessageEl.createDiv();
     chat_message_body_el.addClasses(["khoj-chat-message-text", sender]);
     let chat_message_body_text_el = chat_message_body_el.createDiv();
-    import_obsidian4.MarkdownRenderer.renderMarkdown(message, chat_message_body_text_el, null, null);
+    if (raw) {
+      chat_message_body_text_el.innerHTML = message;
+    } else {
+      import_obsidian4.MarkdownRenderer.renderMarkdown(message, chat_message_body_text_el, null, null);
+    }
     chatMessageEl.style.userSelect = "text";
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
     return chatMessageEl;
@@ -6007,10 +6017,10 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
     return chat_message_el;
   }
-  renderIncrementalMessage(htmlElement, additionalMessage) {
+  async renderIncrementalMessage(htmlElement, additionalMessage) {
     this.result += additionalMessage;
     htmlElement.innerHTML = "";
-    import_obsidian4.MarkdownRenderer.renderMarkdown(this.result, htmlElement, null, null);
+    await import_obsidian4.MarkdownRenderer.renderMarkdown(this.result, htmlElement, null, null);
     this.modalEl.scrollTop = this.modalEl.scrollHeight;
   }
   formatDate(date) {
@@ -6021,11 +6031,26 @@ var KhojChatModal = class extends import_obsidian4.Modal {
   async getChatHistory(chatBodyEl) {
     let chatUrl = `${this.setting.khojUrl}/api/chat/history?client=obsidian`;
     let headers = { "Authorization": `Bearer ${this.setting.khojApiKey}` };
-    let response = await (0, import_obsidian4.request)({ url: chatUrl, headers });
-    let chatLogs = JSON.parse(response).response;
-    chatLogs.forEach((chatLog) => {
-      this.renderMessageWithReferences(chatBodyEl, chatLog.message, chatLog.by, chatLog.context, new Date(chatLog.created));
-    });
+    try {
+      let response = await fetch2(chatUrl, { method: "GET", headers });
+      let responseJson = await response.json();
+      if (responseJson.detail) {
+        let setupMsg = "Hi \u{1F44B}\u{1F3FE}, to start chatting add available chat models options via [the Django Admin panel](/server/admin) on the Server";
+        this.renderMessage(chatBodyEl, setupMsg, "khoj", void 0, true);
+        return false;
+      } else if (responseJson.response) {
+        let chatLogs = responseJson.response;
+        chatLogs.forEach((chatLog) => {
+          var _a4;
+          this.renderMessageWithReferences(chatBodyEl, chatLog.message, chatLog.by, chatLog.context, new Date(chatLog.created), (_a4 = chatLog.intent) == null ? void 0 : _a4.type);
+        });
+      }
+    } catch (err) {
+      let errorMsg = "Unable to get response from Khoj server \u2764\uFE0F\u200D\u{1FA79}. Ensure server is running or contact developers for help at [team@khoj.dev](mailto:team@khoj.dev) or in [Discord](https://discord.gg/BDgyabRM6e)";
+      this.renderMessage(chatBodyEl, errorMsg, "khoj", void 0);
+      return false;
+    }
+    return true;
   }
   async getChatResponse(query) {
     if (!query || query === "")
@@ -6036,7 +6061,7 @@ var KhojChatModal = class extends import_obsidian4.Modal {
     let chatUrl = `${this.setting.khojUrl}/api/chat?q=${encodedQuery}&n=${this.setting.resultsCount}&client=obsidian&stream=true`;
     let responseElement = this.createKhojResponseDiv();
     this.result = "";
-    this.renderIncrementalMessage(responseElement, "\u{1F914}");
+    await this.renderIncrementalMessage(responseElement, "\u{1F914}");
     let response = await fetch2(chatUrl, {
       method: "GET",
       headers: {
@@ -6054,12 +6079,26 @@ var KhojChatModal = class extends import_obsidian4.Modal {
       }
       this.result = "";
       responseElement.innerHTML = "";
+      if (response.headers.get("content-type") == "application/json") {
+        let responseText = "";
+        try {
+          const responseAsJson = await response.json();
+          if (responseAsJson.image) {
+            responseText = `![${query}](data:image/png;base64,${responseAsJson.image})`;
+          } else if (responseAsJson.detail) {
+            responseText = responseAsJson.detail;
+          }
+        } catch (error) {
+          responseText = response.body.read().toString();
+        } finally {
+          await this.renderIncrementalMessage(responseElement, responseText);
+        }
+      }
       for await (const chunk of response.body) {
-        const responseText = chunk.toString();
+        let responseText = chunk.toString();
         if (responseText.includes("### compiled references:")) {
-          const additionalResponse = responseText.split("### compiled references:")[0];
-          this.renderIncrementalMessage(responseElement, additionalResponse);
-          const rawReference = responseText.split("### compiled references:")[1];
+          const [additionalResponse, rawReference] = responseText.split("### compiled references:", 2);
+          await this.renderIncrementalMessage(responseElement, additionalResponse);
           const rawReferenceAsJson = JSON.parse(rawReference);
           let references = responseElement.createDiv();
           references.classList.add("references");
@@ -6089,11 +6128,12 @@ var KhojChatModal = class extends import_obsidian4.Modal {
           referenceExpandButton.innerHTML = expandButtonText;
           references.appendChild(referenceSection);
         } else {
-          this.renderIncrementalMessage(responseElement, responseText);
+          await this.renderIncrementalMessage(responseElement, responseText);
         }
       }
     } catch (err) {
-      this.renderIncrementalMessage(responseElement, "Sorry, unable to get response from Khoj backend \u2764\uFE0F\u200D\u{1FA79}. Contact developer for help at team@khoj.dev or <a href='https://discord.gg/BDgyabRM6e'>in Discord</a>");
+      let errorMsg = "Sorry, unable to get response from Khoj backend \u2764\uFE0F\u200D\u{1FA79}. Contact developer for help at team@khoj.dev or [in Discord](https://discord.gg/BDgyabRM6e)";
+      responseElement.innerHTML = errorMsg;
     }
   }
   flashStatusInChatInput(message) {
@@ -6116,9 +6156,11 @@ var KhojChatModal = class extends import_obsidian4.Modal {
       if (result.status !== "ok") {
         throw new Error("Failed to clear conversation history");
       } else {
-        chatBody.innerHTML = "";
-        await this.getChatHistory(chatBody);
-        this.flashStatusInChatInput(result.message);
+        let getChatHistoryStatus = await this.getChatHistory(chatBody);
+        if (getChatHistoryStatus)
+          chatBody.innerHTML = "";
+        let statusMsg = getChatHistoryStatus ? result.message : "Failed to clear conversation history";
+        this.flashStatusInChatInput(statusMsg);
       }
     } catch (err) {
       this.flashStatusInChatInput("Failed to clear conversation history");
@@ -6156,10 +6198,12 @@ Content-Type: "application/octet-stream"\r
       if (response.status === 200) {
         console.log(response);
         chatInput.value += response.json.text;
-      } else if (response.status === 422) {
-        throw new Error("\u26D4\uFE0F Failed to transcribe audio");
-      } else {
+      } else if (response.status === 501) {
         throw new Error("\u26D4\uFE0F Configure speech-to-text model on server.");
+      } else if (response.status === 422) {
+        throw new Error("\u26D4\uFE0F Audio file to large to process.");
+      } else {
+        throw new Error("\u26D4\uFE0F Failed to transcribe audio.");
       }
     };
     const handleRecording = (stream) => {

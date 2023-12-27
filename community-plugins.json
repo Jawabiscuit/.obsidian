@@ -2,7 +2,6 @@
   "templater-obsidian",
   "obsidian-advanced-slides",
   "text-snippets-obsidian",
-  "table-editor-obsidian",
   "obsidian-timestamp-notes",
   "advanced-cursors",
   "obsidian-excalidraw-plugin",
@@ -20,9 +19,15 @@
   "obsidian-advanced-uri",
   "obsidian-linter",
   "chatgpt-md",
-  "better-plugins-page",
   "settings-search",
   "hide-folders",
   "obsidian-front-matter-title-plugin",
-  "obsidian-minimal-settings"
+  "obsidian-minimal-settings",
+  "obsidian-toggle-case",
+  "obsidian-sortable",
+  "obsidian-style-settings",
+  "omnisearch",
+  "obsidian-link-embed",
+  "editor-commands-remap",
+  "modules"
 ]

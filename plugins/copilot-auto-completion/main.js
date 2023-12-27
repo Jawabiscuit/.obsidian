@@ -30384,13 +30384,16 @@ function SettingsView(props) {
         TextSettingItem,
         {
           name: "OpenAI API URL",
-          description: "The URL used in the requests. For the openai API this is fixed.",
+          description: "The URL used in the requests.",
           placeholder: "Your API URL...",
           value: settings.openAIApiSettings.url,
           errorMessage: errors.get("openAIApiSettings.url"),
-          disabled: true,
-          setValue: (_) => {
-          }
+          setValue: (value) => updateSettings({
+            openAIApiSettings: {
+              ...settings.openAIApiSettings,
+              url: value
+            }
+          })
         }
       ), /* @__PURE__ */ React9.createElement(
         TextSettingItem,

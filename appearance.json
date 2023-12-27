@@ -4,8 +4,9 @@
   "cssTheme": "Minimal",
   "enabledCssSnippets": [
     "callouts",
-    "clean-embeds",
-    "lock"
+    "lock",
+    "supercharged-links-gen",
+    "naked-embeds"
   ],
   "accentColor": "",
   "monospaceFontFamily": "Fira Code",

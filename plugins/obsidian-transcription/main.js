@@ -633,6 +633,10 @@ var import_obsidian4 = require("obsidian");
 // src/settings.ts
 var import_obsidian = require("obsidian");
 var SWIFTINK_AUTH_CALLBACK = "https://swiftink.io/login/?callback=obsidian://swiftink_auth";
+var SUPABASE_URL = "https://auth.swiftink.io";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjZGVxZ3JzcWFleHBub2dhdWx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU2OTM4NDUsImV4cCI6MjAwMTI2OTg0NX0.BBxpvuejw_E-Q_g6SU6G6sGP_6r4KnrP-vHV2JZpAho";
+var API_BASE = "https://api.swiftink.io";
+var IS_SWIFTINK = "swiftink";
 var DEFAULT_SETTINGS = {
   timestamps: false,
   timestampFormat: "HH:mm:ss",
@@ -641,7 +645,7 @@ var DEFAULT_SETTINGS = {
   verbosity: 1,
   whisperASRUrl: "http://localhost:9000",
   debug: false,
-  transcription_engine: "swiftink",
+  transcriptionEngine: "swiftink",
   embedAdditionalFunctionality: true,
   embedSummary: true,
   embedOutline: true,
@@ -749,8 +753,8 @@ var TranscriptionSettingTab = class extends import_obsidian.PluginSettingTab {
       text: "Settings for Obsidian Transcription"
     });
     new import_obsidian.Setting(containerEl).setName("General Settings").setHeading();
-    new import_obsidian.Setting(containerEl).setName("Transcription engine").setDesc("The transcription engine to use").setTooltip("Swiftink is a free cloud based transcription engine (no local set up, additional AI features). Whisper ASR is a self-hosted local transcription engine that uses a Python app (requires local setup).").setClass("transcription-engine-setting").addDropdown((dropdown) => dropdown.addOption("swiftink", "Swiftink").addOption("whisper_asr", "Whisper ASR").setValue(this.plugin.settings.transcription_engine).onChange(async (value) => {
-      this.plugin.settings.transcription_engine = value;
+    new import_obsidian.Setting(containerEl).setName("Transcription engine").setDesc("The transcription engine to use").setTooltip("Swiftink is a free cloud based transcription engine (no local set up, additional AI features). Whisper ASR is a self-hosted local transcription engine that uses a Python app (requires local setup).").setClass("transcription-engine-setting").addDropdown((dropdown) => dropdown.addOption("swiftink", "Swiftink").addOption("whisper_asr", "Whisper ASR").setValue(this.plugin.settings.transcriptionEngine).onChange(async (value) => {
+      this.plugin.settings.transcriptionEngine = value;
       await this.plugin.saveSettings();
       if (value == "swiftink") {
         containerEl.findAll(".swiftink-settings").forEach((element) => {
@@ -894,14 +898,14 @@ var TranscriptionSettingTab = class extends import_obsidian.PluginSettingTab {
     disclaimer.innerHTML = "By proceeding you agree to our <a href='https://www.swiftink.io/terms'>Terms of Service</a> and <a href='https://www.swiftink.io/privacy'>Privacy Policy</a>.";
     disclaimer.style.textAlign = "center";
     disclaimer.style.fontSize = "0.85em";
-    if (this.plugin.settings.transcription_engine == "swiftink") {
+    if (this.plugin.settings.transcriptionEngine == "swiftink") {
       containerEl.findAll(".swiftink-settings").forEach((element) => {
         element.style.display = "block";
       });
       containerEl.findAll(".whisper-asr-settings").forEach((element) => {
         element.style.display = "none";
       });
-    } else if (this.plugin.settings.transcription_engine == "whisper_asr") {
+    } else if (this.plugin.settings.transcriptionEngine == "whisper_asr") {
       containerEl.findAll(".swiftink-settings").forEach((element) => {
         element.style.display = "none";
       });
@@ -5194,15 +5198,16 @@ var isSupported = XMLHttpRequest2 && Blob2 && typeof Blob2.prototype.slice === "
 // src/transcribe.ts
 var MAX_TRIES = 100;
 var TranscriptionEngine = class {
-  constructor(settings, vault, statusBar, supabase) {
+  constructor(settings, vault, statusBar, supabase, app) {
     this.transcription_engines = {
       swiftink: this.getTranscriptionSwiftink,
       whisper_asr: this.getTranscriptionWhisperASR
     };
     this.settings = settings;
     this.vault = vault;
-    this.status_bar = statusBar;
+    this.statusBar = statusBar;
     this.supabase = supabase;
+    this.app = app;
   }
   segmentsToTimestampedString(segments, timestampFormat) {
     let transcription = "";
@@ -5221,9 +5226,9 @@ var TranscriptionEngine = class {
   }
   async getTranscription(file) {
     if (this.settings.debug)
-      console.log(`Transcription engine: ${this.settings.transcription_engine}`);
+      console.log(`Transcription engine: ${this.settings.transcriptionEngine}`);
     const start = new Date();
-    this.transcriptionEngine = this.transcription_engines[this.settings.transcription_engine];
+    this.transcriptionEngine = this.transcription_engines[this.settings.transcriptionEngine];
     return this.transcriptionEngine(file).then((transcription) => {
       if (this.settings.debug)
         console.log(`Transcription: ${transcription}`);
@@ -5264,12 +5269,10 @@ var TranscriptionEngine = class {
     });
   }
   async getTranscriptionSwiftink(file) {
-    const api_base = "https://api.swiftink.io";
     const session = await this.supabase.auth.getSession().then((res) => {
       return res.data;
     });
     if (session == null || session.session == null) {
-      window.open(SWIFTINK_AUTH_CALLBACK, "_blank");
       return Promise.reject("No user session found. Please log in and try again.");
     }
     const token = session.session.access_token;
@@ -5293,9 +5296,9 @@ var TranscriptionEngine = class {
         chunkSize: 6 * 1024 * 1024,
         onProgress: (bytesUploaded, bytesTotal) => {
           const percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-          const noticeMessage = `Uploading: ${percentage}%`;
+          const noticeMessage = `Uploading ${filename}: ${percentage}%`;
           if (!uploadProgressNotice) {
-            uploadProgressNotice = new import_obsidian3.Notice(noticeMessage, 800 * 100);
+            uploadProgressNotice = new import_obsidian3.Notice(noticeMessage, 80 * 1e3);
           } else {
             uploadProgressNotice.setMessage(noticeMessage);
           }
@@ -5326,7 +5329,7 @@ var TranscriptionEngine = class {
     }
     let transcriptionProgressNotice = null;
     const fileUrl = `https://auth.swiftink.io/storage/v1/object/public/swiftink-upload/${id}/${filename}`;
-    const url = `${api_base}/transcripts/`;
+    const url = `${API_BASE}/transcripts/`;
     const headers = { Authorization: `Bearer ${token}` };
     const body = {
       name: filename,
@@ -5362,7 +5365,7 @@ var TranscriptionEngine = class {
       const updateTranscriptionNotice = () => {
         const noticeMessage = `Transcribing ${transcript.name}...`;
         if (!transcriptionProgressNotice) {
-          transcriptionProgressNotice = new import_obsidian3.Notice(noticeMessage, 800 * 100);
+          transcriptionProgressNotice = new import_obsidian3.Notice(noticeMessage, 80 * 1e3);
         } else {
           transcriptionProgressNotice.setMessage(noticeMessage);
         }
@@ -5370,7 +5373,7 @@ var TranscriptionEngine = class {
       const poll = setInterval(async () => {
         const options2 = {
           method: "GET",
-          url: `${api_base}/transcripts/${transcript.id}`,
+          url: `${API_BASE}/transcripts/${transcript.id}`,
           headers
         };
         const transcript_res = await (0, import_obsidian3.requestUrl)(options2);
@@ -10355,15 +10358,139 @@ var createClient = (supabaseUrl, supabaseKey, options) => {
 
 // src/main.ts
 var _Transcription = class extends import_obsidian4.Plugin {
-  constructor() {
-    super(...arguments);
-    this.supabase = createClient("https://auth.swiftink.io", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjZGVxZ3JzcWFleHBub2dhdWx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU2OTM4NDUsImV4cCI6MjAwMTI2OTg0NX0.BBxpvuejw_E-Q_g6SU6G6sGP_6r4KnrP-vHV2JZpAho", {
+  constructor(app, manifest) {
+    super(app, manifest);
+    this.pendingCommand = null;
+    this.ongoingTranscriptionTasks = [];
+    this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
       auth: {
         detectSessionInUrl: false,
         autoRefreshToken: true,
         persistSession: true
       }
     });
+    this.getTranscribeableFiles = async (file) => {
+      const filesLinked = Object.keys(this.app.metadataCache.resolvedLinks[file.path]);
+      const filesToTranscribe = [];
+      for (const linkedFilePath of filesLinked) {
+        const linkedFileExtension = linkedFilePath.split(".").pop();
+        if (linkedFileExtension === void 0 || !_Transcription.transcribeFileExtensions.includes(linkedFileExtension.toLowerCase())) {
+          if (this.settings.debug)
+            console.log("Skipping " + linkedFilePath + " because the file extension is not in the list of transcribeable file extensions");
+          continue;
+        }
+        const linkedFile = this.app.vault.getAbstractFileByPath(linkedFilePath);
+        if (linkedFile instanceof import_obsidian4.TFile)
+          filesToTranscribe.push(linkedFile);
+        else {
+          if (this.settings.debug)
+            console.log("Could not find file " + linkedFilePath);
+          continue;
+        }
+      }
+      return filesToTranscribe;
+    };
+  }
+  querySelectionOnAuthentication(authString, display) {
+    if (authString === ".swiftink-manage-account-btn") {
+      return document.querySelectorAll(authString).forEach((element) => {
+        var _a;
+        element.innerHTML = `Manage ${(_a = this.user) == null ? void 0 : _a.email}`;
+      });
+    } else {
+      return document.querySelectorAll(authString).forEach((element) => {
+        element.setAttribute("style", display);
+      });
+    }
+  }
+  async executePendingCommand(pendingCommand) {
+    try {
+      const session = await this.supabase.auth.getSession().then((res) => {
+        return res.data;
+      });
+      if (!session || !session.session) {
+        throw new Error("User not authenticated.");
+      }
+      if (pendingCommand == null ? void 0 : pendingCommand.file) {
+        const abortController = new AbortController();
+        const task = this.transcribeAndWrite(pendingCommand.parentFile, pendingCommand.file, abortController);
+        this.ongoingTranscriptionTasks.push({
+          task,
+          abortController
+        });
+        await task;
+      } else {
+        const filesToTranscribe = await this.getTranscribeableFiles(pendingCommand.parentFile);
+        for (const fileToTranscribe of filesToTranscribe) {
+          const abortController = new AbortController();
+          const task = this.transcribeAndWrite(pendingCommand.parentFile, fileToTranscribe, abortController);
+          this.ongoingTranscriptionTasks.push({ task, abortController });
+          await task;
+        }
+      }
+    } catch (error) {
+      console.error("Error during transcription process:", error);
+    }
+  }
+  async transcribeAndWrite(parent_file, file, abortController) {
+    var _a, _b;
+    try {
+      if (this.settings.debug)
+        console.log("Transcribing " + file.path);
+      const transcription = await this.transcriptionEngine.getTranscription(file);
+      let fileText = await this.app.vault.read(parent_file);
+      const fileLinkString = this.app.metadataCache.fileToLinktext(file, parent_file.path);
+      const fileLinkStringTagged = `[[${fileLinkString}]]`;
+      const startReplacementIndex = fileText.indexOf(fileLinkStringTagged) + fileLinkStringTagged.length;
+      fileText = [
+        fileText.slice(0, startReplacementIndex),
+        `
+${transcription}`,
+        fileText.slice(startReplacementIndex)
+      ].join("");
+      if ((_a = abortController == null ? void 0 : abortController.signal) == null ? void 0 : _a.aborted) {
+        new import_obsidian4.Notice(`Transcription of ${file.name} cancelled!`, 5 * 1e3);
+        return;
+      }
+      await this.app.vault.modify(parent_file, fileText);
+    } catch (error) {
+      if ((_b = error == null ? void 0 : error.message) == null ? void 0 : _b.includes("402")) {
+        new import_obsidian4.Notice("You have exceeded the free tier.\nPlease upgrade to a paid plan at swiftink.io/pricing to continue transcribing files.\nThanks for using Swiftink!", 10 * 1e3);
+      } else {
+        if (this.settings.debug)
+          console.log(error);
+        new import_obsidian4.Notice(`Error transcribing file: ${error}`, 10 * 1e3);
+      }
+    } finally {
+      abortController = null;
+    }
+  }
+  onFileMenu(menu, file) {
+    var _a;
+    const parentFile = this.app.workspace.getActiveFile();
+    if (parentFile instanceof import_obsidian4.TFile && file instanceof import_obsidian4.TFile) {
+      const fileExtension = (_a = file.extension) == null ? void 0 : _a.toLowerCase();
+      if (fileExtension && _Transcription.transcribeFileExtensions.includes(fileExtension)) {
+        menu.addItem((item) => {
+          item.setTitle("Transcribe").setIcon("headphones").onClick(async () => {
+            if (this.user == null && this.settings.transcriptionEngine == IS_SWIFTINK) {
+              this.pendingCommand = {
+                file,
+                parentFile
+              };
+              window.open(SWIFTINK_AUTH_CALLBACK, "_blank");
+            }
+            const abortController = new AbortController();
+            const task = this.transcribeAndWrite(parentFile, file, abortController);
+            this.ongoingTranscriptionTasks.push({
+              task,
+              abortController
+            });
+            await task;
+          });
+        });
+      }
+    }
   }
   async onload() {
     await this.loadSettings();
@@ -10371,8 +10498,8 @@ var _Transcription = class extends import_obsidian4.Plugin {
     console.log("Loading Obsidian Transcription");
     if (this.settings.debug)
       console.log("Debug mode enabled");
-    this.transcription_engine = new TranscriptionEngine(this.settings, this.app.vault, this.statusBar, this.supabase);
-    if (this.settings.transcription_engine == "swiftink") {
+    this.transcriptionEngine = new TranscriptionEngine(this.settings, this.app.vault, this.statusBar, this.supabase, this.app);
+    if (this.settings.transcriptionEngine == "swiftink") {
       this.user = await this.supabase.auth.getUser().then((res) => {
         return res.data.user || null;
       });
@@ -10407,62 +10534,49 @@ var _Transcription = class extends import_obsidian4.Plugin {
       this.statusBar = new StatusBar(this.addStatusBarItem());
       this.registerInterval(window.setInterval(() => this.statusBar.display(), 1e3));
     }
-    const getTranscribeableFiles = (file) => {
-      const filesLinked = Object.keys(this.app.metadataCache.resolvedLinks[file.path]);
-      const filesToTranscribe = [];
-      for (const linkedFilePath of filesLinked) {
-        const linkedFileExtension = linkedFilePath.split(".").pop();
-        if (linkedFileExtension === void 0 || !_Transcription.transcribeFileExtensions.includes(linkedFileExtension.toLowerCase())) {
-          if (this.settings.debug)
-            console.log("Skipping " + linkedFilePath + " because the file extension is not in the list of transcribeable file extensions");
-          continue;
-        }
-        const linkedFile = this.app.vault.getAbstractFileByPath(linkedFilePath);
-        if (linkedFile instanceof import_obsidian4.TFile)
-          filesToTranscribe.push(linkedFile);
-        else {
-          if (this.settings.debug)
-            console.log("Could not find file " + linkedFilePath);
-          continue;
+    this.registerEvent(this.app.workspace.on("file-menu", this.onFileMenu.bind(this)));
+    this.addCommand({
+      id: "obsidian-transcription-stop",
+      name: "Stop Transcription",
+      editorCallback: async () => {
+        try {
+          if (this.ongoingTranscriptionTasks.length > 0) {
+            console.log("Stopping ongoing transcription...");
+            for (const { abortController, task } of this.ongoingTranscriptionTasks) {
+              abortController.abort();
+              await task.catch(() => {
+              });
+            }
+            this.ongoingTranscriptionTasks = [];
+          } else {
+            new import_obsidian4.Notice("No ongoing transcription to stop", 5 * 1e3);
+          }
+        } catch (error) {
+          console.error("Error stopping transcription:", error);
         }
       }
-      return filesToTranscribe;
-    };
-    const transcribeAndWrite = async (parent_file, file) => {
-      if (this.settings.debug)
-        console.log("Transcribing " + file.path);
-      this.transcription_engine.getTranscription(file).then(async (transcription) => {
-        let fileText = await this.app.vault.read(parent_file);
-        const fileLinkString = this.app.metadataCache.fileToLinktext(file, parent_file.path);
-        const fileLinkStringTagged = `[[${fileLinkString}]]`;
-        const startReplacementIndex = fileText.indexOf(fileLinkStringTagged) + fileLinkStringTagged.length;
-        fileText = [
-          fileText.slice(0, startReplacementIndex),
-          `
-${transcription}`,
-          fileText.slice(startReplacementIndex)
-        ].join("");
-        await this.app.vault.modify(parent_file, fileText);
-      }).catch((error) => {
-        if (error && error.message && error.message.includes("402")) {
-          new import_obsidian4.Notice("You have exceeded the free tier. Please upgrade to a paid plan at swiftink.io/pricing to continue transcribing files. Thanks for using Swiftink!", 1e4);
-        } else {
-          if (this.settings.debug)
-            console.log(error);
-          new import_obsidian4.Notice(`Error transcribing file: ${error}`);
-        }
-      });
-    };
+    });
     this.addCommand({
       id: "obsidian-transcription-transcribe-all-in-view",
       name: "Transcribe all files in view",
       editorCallback: async (editor, view) => {
         if (view.file === null)
           return;
-        const filesToTranscribe = getTranscribeableFiles(view.file);
-        new import_obsidian4.Notice("Files Selected " + view.file.name, 3e3);
-        for (const fileToTranscribe of filesToTranscribe) {
-          transcribeAndWrite(view.file, fileToTranscribe);
+        const filesToTranscribe = await this.getTranscribeableFiles(view.file);
+        const fileNames = filesToTranscribe.map((file) => file.name).join(", ");
+        new import_obsidian4.Notice(`Files Selected: ${fileNames}`, 5 * 1e3);
+        if (this.user == null && this.settings.transcriptionEngine == IS_SWIFTINK) {
+          this.pendingCommand = {
+            parentFile: view.file
+          };
+          window.open(SWIFTINK_AUTH_CALLBACK, "_blank");
+        } else {
+          for (const fileToTranscribe of filesToTranscribe) {
+            const abortController = new AbortController();
+            const task = this.transcribeAndWrite(view.file, fileToTranscribe, abortController);
+            this.ongoingTranscriptionTasks.push({ task, abortController });
+            await task;
+          }
         }
       }
     });
@@ -10472,22 +10586,40 @@ ${transcription}`,
       editorCallback: async (editor, view) => {
         if (view.file === null)
           return;
-        const filesToTranscribe = getTranscribeableFiles(view.file);
+        const filesToTranscribe = await this.getTranscribeableFiles(view.file);
         class FileSelectionModal extends import_obsidian4.FuzzySuggestModal {
+          constructor(app, transcriptionInstance) {
+            super(app);
+            this.transcriptionInstance = transcriptionInstance;
+          }
           getItems() {
             return filesToTranscribe;
           }
           getItemText(file) {
             return file.name;
           }
-          onChooseItem(file) {
+          async onChooseItem(file) {
             if (view.file === null)
               return;
-            new import_obsidian4.Notice(`File Selected: ${file.name}`);
-            transcribeAndWrite(view.file, file);
+            new import_obsidian4.Notice(`File Selected: ${file.name}`, 5 * 1e3);
+            if (this.transcriptionInstance.user == null && this.transcriptionInstance.settings.transcriptionEngine == IS_SWIFTINK) {
+              this.transcriptionInstance.pendingCommand = {
+                file,
+                parentFile: view.file
+              };
+              window.open(SWIFTINK_AUTH_CALLBACK, "_blank");
+            } else {
+              const abortController = new AbortController();
+              const task = this.transcriptionInstance.transcribeAndWrite(view.file, file, abortController);
+              this.transcriptionInstance.ongoingTranscriptionTasks.push({
+                task,
+                abortController
+              });
+              await task;
+            }
           }
         }
-        new FileSelectionModal(this.app).open();
+        new FileSelectionModal(this.app, this).open();
       }
     });
     this.app.workspace.on("quit", () => {
@@ -10516,23 +10648,16 @@ ${transcription}`,
       this.settings.swiftink_refresh_token = refresh_token;
       await this.saveSettings();
       if (this.user == null) {
-        document.querySelectorAll(".swiftink-unauthed-only").forEach((element) => {
-          element.setAttribute("style", "display: block !important");
-        });
-        document.querySelectorAll(".swiftink-authed-only").forEach((element) => {
-          element.setAttribute("style", "display: none !important");
-        });
+        this.querySelectionOnAuthentication(".swiftink-unauthed-only", "display: block !important");
+        this.querySelectionOnAuthentication(".swiftink-authed-only", "display: none !important");
       } else {
-        document.querySelectorAll(".swiftink-unauthed-only").forEach((element) => {
-          element.setAttribute("style", "display: none !important");
-        });
-        document.querySelectorAll(".swiftink-authed-only").forEach((element) => {
-          element.setAttribute("style", "display: block !important");
-        });
-        document.querySelectorAll(".swiftink-manage-account-btn").forEach((element) => {
-          var _a;
-          element.innerHTML = `Manage ${(_a = this.user) == null ? void 0 : _a.email}`;
-        });
+        this.querySelectionOnAuthentication(".swiftink-unauthed-only", "display: none !important");
+        this.querySelectionOnAuthentication(".swiftink-authed-only", "display: block !important");
+        this.querySelectionOnAuthentication(".swiftink-manage-account-btn", "");
+      }
+      if (this.pendingCommand) {
+        await this.executePendingCommand(this.pendingCommand);
+        this.pendingCommand = null;
       }
       return;
     });
