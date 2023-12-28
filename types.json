@@ -12,6 +12,7 @@
     "created": "datetime",
     "applied": "datetime",
     "hiring": "checkbox",
-    "application sent": "checkbox"
+    "application sent": "checkbox",
+    "published": "date"
   }
 }
