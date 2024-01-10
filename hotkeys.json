@@ -541,5 +541,13 @@
       ],
       "key": "ArrowDown"
     }
+  ],
+  "periodic-notes:open-daily-note": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "D"
+    }
   ]
 }
