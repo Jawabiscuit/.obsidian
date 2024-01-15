@@ -31310,8 +31310,9 @@ var PredictingState = class extends state_default {
         suggesting_state_default.withSuggestion(this.context, prediction)
       );
     } catch (error) {
+      console.error(error);
       new import_obsidian7.Notice(
-        `Something went wrong cannot make prediction. Please check your settings.`
+        `Something went wrong cannot make a prediction. Full error is available in the dev console. Please check your settings. `
       );
       this.context.transitionTo(new idle_state_default(this.context));
       return;
