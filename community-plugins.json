@@ -29,5 +29,7 @@
   "omnisearch",
   "obsidian-link-embed",
   "editor-commands-remap",
-  "modules"
+  "modules",
+  "search-on-internet",
+  "better-word-count"
 ]
