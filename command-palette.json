@@ -1,10 +1,12 @@
 {
   "pinned": [
+    "quickadd:choice:2761b9fe-5216-4a07-8593-a5cabe99bf02",
     "quickadd:choice:a09116b4-5190-42cb-ac7a-b4ab5b038d8f",
     "quickadd:choice:d34515d1-655b-4280-8a53-7c748ca7b886",
     "quickadd:choice:d6addb58-c412-49ad-9356-d788ac4640f6",
     "quickadd:choice:d0af5e9f-3da0-486e-9312-f6702f7c6e67",
     "templater-obsidian:create-new-note-from-template",
+    "quickadd:choice:1ef9fd11-f657-4bee-9bef-4a02d5bb496c",
     "quickadd:choice:5583b5fb-1112-4613-a0d6-44d5a1c7609a",
     "quickadd:choice:d624896d-6029-4bf6-9ec3-83ef168a2ef9",
     "obsidian-kanban:toggle-kanban-view",
