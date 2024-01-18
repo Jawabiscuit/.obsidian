@@ -15,7 +15,6 @@
   "obsidian-day-planner",
   "obsidian-map-view",
   "metaedit",
-  "obsidian-kanban",
   "obsidian-advanced-uri",
   "obsidian-linter",
   "chatgpt-md",
@@ -31,5 +30,8 @@
   "editor-commands-remap",
   "modules",
   "search-on-internet",
-  "better-word-count"
+  "better-word-count",
+  "modalforms",
+  "obsidian-kanban",
+  "metadata-menu"
 ]
