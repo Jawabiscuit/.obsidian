@@ -1,0 +1,77 @@
+{
+  "advanced-cursors:add-cursor-above": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "ArrowUp"
+    }
+  ],
+  "advanced-cursors:add-cursor-below": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "ArrowDown"
+    }
+  ],
+  "advanced-cursors:add-next-match-to-selections": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "D"
+    }
+  ],
+  "editor:delete-paragraph": [],
+  "advanced-cursors:copy-line-down": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "ArrowDown"
+    }
+  ],
+  "advanced-cursors:copy-line-up": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "ArrowUp"
+    }
+  ],
+  "advanced-cursors:move-to-next-match": [
+    {
+      "modifiers": [],
+      "key": "F3"
+    }
+  ],
+  "advanced-cursors:move-to-previous-match": [
+    {
+      "modifiers": [
+        "Shift"
+      ],
+      "key": "F3"
+    }
+  ],
+  "editor:swap-line-up": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "ArrowUp"
+    }
+  ],
+  "editor:swap-line-down": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "ArrowDown"
+    }
+  ]
+}
