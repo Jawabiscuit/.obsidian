@@ -6,5 +6,7 @@
   "templater-obsidian",
   "metaedit",
   "calendar",
-  "periodic-notes"
+  "periodic-notes",
+  "obsidian-minimal-settings",
+  "obsidian-style-settings"
 ]
