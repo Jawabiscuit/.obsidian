@@ -1,5 +1,8 @@
 [
   "metadata-menu",
   "dataview",
-  "advanced-cursors"
+  "advanced-cursors",
+  "modules",
+  "templater-obsidian",
+  "metaedit"
 ]
