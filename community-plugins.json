@@ -13,5 +13,11 @@
   "quickadd",
   "obsidian-day-planner",
   "obsidian-map-view",
-  "obsidian-linter"
+  "obsidian-linter",
+  "editor-commands-remap",
+  "hide-folders",
+  "obsidian-timestamp-notes",
+  "obsidian-advanced-slides",
+  "omnisearch",
+  "chatgpt-md"
 ]
