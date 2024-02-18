@@ -3,6 +3,7 @@
     "aliases": "aliases",
     "cssclasses": "multitext",
     "tags": "tags",
-    "series": "checkbox"
+    "series": "checkbox",
+    "filesPaths": "multitext"
   }
 }
