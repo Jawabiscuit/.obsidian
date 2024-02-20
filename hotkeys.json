@@ -523,5 +523,11 @@
       ],
       "key": "D"
     }
+  ],
+  "obsidian-minimal-settings:toggle-minimal-focus-mode": [
+    {
+      "modifiers": [],
+      "key": "F11"
+    }
   ]
 }
