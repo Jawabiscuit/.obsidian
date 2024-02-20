@@ -2,5 +2,9 @@
   "accentColor": "",
   "translucency": false,
   "cssTheme": "Minimal",
-  "theme": "obsidian"
+  "theme": "obsidian",
+  "enabledCssSnippets": [
+    "callouts",
+    "lock"
+  ]
 }
