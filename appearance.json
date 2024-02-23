@@ -2,7 +2,7 @@
   "accentColor": "",
   "translucency": false,
   "cssTheme": "Minimal",
-  "theme": "obsidian",
+  "theme": "system",
   "enabledCssSnippets": [
     "callouts",
     "lock"
