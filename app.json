@@ -9,5 +9,12 @@
     "landscape": false,
     "margin": "0",
     "downscalePercent": 82
-  }
+  },
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "attachment",
+  "userIgnoreFilters": [
+    "_mm/",
+    "_modules/",
+    "_views/"
+  ]
 }
