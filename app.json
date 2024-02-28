@@ -13,7 +13,6 @@
   "alwaysUpdateLinks": true,
   "attachmentFolderPath": "attachment",
   "userIgnoreFilters": [
-    "_mm/",
     "_modules/",
     "_views/"
   ]
