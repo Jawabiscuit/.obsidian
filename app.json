@@ -1,7 +1,7 @@
 {
   "promptDelete": false,
   "showInlineTitle": false,
-  "propertiesInDocument": "visible",
+  "propertiesInDocument": "hidden",
   "readableLineLength": false,
   "showIndentGuide": false,
   "pdfExportSettings": {
