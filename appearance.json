@@ -1,0 +1,10 @@
+{
+  "accentColor": "#6ae1f0",
+  "translucency": false,
+  "cssTheme": "Minimal",
+  "theme": "system",
+  "enabledCssSnippets": [
+    "callouts",
+    "lock"
+  ]
+}
