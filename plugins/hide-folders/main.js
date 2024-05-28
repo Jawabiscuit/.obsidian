@@ -31,6 +31,7 @@ var import_obsidian = require("obsidian");
 var DEFAULT_SETTINGS = {
   areFoldersHidden: true,
   matchCaseInsensitive: true,
+  addHiddenFoldersToObsidianIgnoreList: false,
   attachmentFolderNames: ["attachments"]
 };
 var HideFoldersPlugin = class extends import_obsidian.Plugin {
@@ -39,22 +40,24 @@ var HideFoldersPlugin = class extends import_obsidian.Plugin {
       return;
     if (recheckPreviouslyHiddenFolders) {
       document.querySelectorAll(".obsidian-hide-folders--hidden").forEach((folder) => {
-        folder.parentElement.style.height = "";
-        folder.parentElement.style.overflow = "";
+        folder.style.height = "";
+        folder.style.overflow = "";
         folder.removeClass("obsidian-hide-folders--hidden");
       });
     }
     this.settings.attachmentFolderNames.forEach((folderName) => {
       if (this.getFolderNameWithoutPrefix(folderName) === "")
         return;
-      const folderElements = document.querySelectorAll(this.getQuerySelectorStringForFolderName(folderName));
+      const folderElements = document.querySelectorAll([
+        this.getQuerySelectorStringForFolderName(folderName)
+      ].filter((o) => o != null).join(", "));
       folderElements.forEach((folder) => {
-        if (!folder || !folder.parentElement) {
+        if (!folder) {
           return;
         }
         folder.addClass("obsidian-hide-folders--hidden");
-        folder.parentElement.style.height = this.settings.areFoldersHidden ? "0" : "";
-        folder.parentElement.style.overflow = this.settings.areFoldersHidden ? "hidden" : "";
+        folder.style.height = this.settings.areFoldersHidden ? "0" : "";
+        folder.style.overflow = this.settings.areFoldersHidden ? "hidden" : "";
       });
     });
   }
@@ -69,11 +72,11 @@ var HideFoldersPlugin = class extends import_obsidian.Plugin {
   }
   getQuerySelectorStringForFolderName(folderName) {
     if (folderName.toLowerCase().startsWith("endswith::")) {
-      return `[data-path$="${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}]`;
+      return `*:has(> [data-path$="${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}])`;
     } else if (folderName.toLowerCase().startsWith("startswith::")) {
-      return `.nav-folder-title[data-path^="${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}], .nav-folder-title[data-path*="/${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}]`;
+      return `*:has(> .nav-folder-title[data-path^="${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}]), *:has(> .nav-folder-title[data-path*="/${this.getFolderNameWithoutPrefix(folderName)}"${this.settings.matchCaseInsensitive ? " i" : ""}])`;
     } else {
-      return `[data-path$="/${folderName.trim()}"${this.settings.matchCaseInsensitive ? " i" : ""}], [data-path="${folderName.trim()}"${this.settings.matchCaseInsensitive ? " i" : ""}]`;
+      return `*:has(> [data-path$="/${folderName.trim()}"${this.settings.matchCaseInsensitive ? " i" : ""}]), *:has(> [data-path="${folderName.trim()}"${this.settings.matchCaseInsensitive ? " i" : ""}])`;
     }
   }
   async toggleFunctionality() {
@@ -82,6 +85,44 @@ var HideFoldersPlugin = class extends import_obsidian.Plugin {
     (0, import_obsidian.setIcon)(this.ribbonIconButton, this.settings.areFoldersHidden ? "eye" : "eye-off");
     this.statusBarItem.innerHTML = this.settings.areFoldersHidden ? "Configured folders are hidden" : "";
     await this.processFolders();
+    await this.saveSettings();
+    await this.updateObsidianIgnoreList();
+  }
+  createIgnoreListRegExpForFolderName(rawFolderName) {
+    const folderName = this.settings.matchCaseInsensitive ? this.getFolderNameWithoutPrefix(rawFolderName).split("").map((c) => c.toLowerCase() != c.toUpperCase() ? `[${c.toLowerCase()}${c.toUpperCase()}]` : c).join("") : this.getFolderNameWithoutPrefix(rawFolderName);
+    if (rawFolderName.toLowerCase().startsWith("endswith::")) {
+      return `/(${folderName}$)|(${folderName}/)/`;
+    } else if (rawFolderName.toLowerCase().startsWith("startswith::")) {
+      return `/(^${folderName})|(/${folderName})/`;
+    } else {
+      return `/${folderName}/`;
+    }
+  }
+  async updateObsidianIgnoreList(processFeatureDisabling) {
+    var _a;
+    if (!this.settings.addHiddenFoldersToObsidianIgnoreList && !processFeatureDisabling)
+      return;
+    let ignoreList = (_a = this.app.vault.getConfig("userIgnoreFilters")) != null ? _a : [];
+    if (this.settings.areFoldersHidden && !processFeatureDisabling) {
+      this.settings.attachmentFolderNames.forEach((folderName) => {
+        if (this.getFolderNameWithoutPrefix(folderName).trim() === "")
+          return;
+        if (ignoreList.contains(this.createIgnoreListRegExpForFolderName(folderName)))
+          return;
+        ignoreList.push(this.createIgnoreListRegExpForFolderName(folderName));
+      });
+    } else {
+      const folderNameRegexes = this.settings.attachmentFolderNames.map((folderName) => this.createIgnoreListRegExpForFolderName(folderName));
+      ignoreList = ignoreList.filter((s) => !folderNameRegexes.includes(s));
+    }
+    this.app.vault.setConfig("userIgnoreFilters", ignoreList);
+  }
+  async removeSpecificFoldersFromObsidianIgnoreList(folderNames) {
+    folderNames.forEach((folderName) => {
+      var _a;
+      (_a = this.app.vault.config.userIgnoreFilters) == null ? void 0 : _a.remove(this.createIgnoreListRegExpForFolderName(folderName));
+      this.app.vault.trigger("config-changed");
+    });
   }
   async onload() {
     console.log("loading plugin hide-folders");
@@ -134,17 +175,29 @@ var HideFoldersPluginSettingTab = class extends import_obsidian.PluginSettingTab
     const { containerEl } = this;
     containerEl.empty();
     new import_obsidian.Setting(containerEl).setName("Folders to hide").setDesc("The names of the folders to hide, one per line. Either exact folder-names, startsWith::FOLDERPREFIX, or endsWith::FOLDERSUFFIX").addTextArea((text) => text.setPlaceholder("attachments\nendsWith::_attachments").setValue(this.plugin.settings.attachmentFolderNames.join("\n")).onChange(async (value) => {
-      this.plugin.settings.attachmentFolderNames = value.split("\n");
+      const newSettingsValue = value.split("\n");
+      await this.plugin.removeSpecificFoldersFromObsidianIgnoreList(this.plugin.settings.attachmentFolderNames.filter((e) => !newSettingsValue.includes(e)));
+      this.plugin.settings.attachmentFolderNames = newSettingsValue;
       await this.plugin.saveSettings();
+      await this.plugin.updateObsidianIgnoreList();
     }));
     new import_obsidian.Setting(containerEl).setName("Ignore Upper/lowercase").setDesc("If enabled, 'SOMEFOLDER', 'someFolder', or 'sOmeFoldEr' will all be treated the same and matched.").addToggle((toggle) => toggle.setValue(this.plugin.settings.matchCaseInsensitive).onChange(async (value) => {
+      await this.plugin.removeSpecificFoldersFromObsidianIgnoreList(this.plugin.settings.attachmentFolderNames);
       this.plugin.settings.matchCaseInsensitive = value;
       await this.plugin.saveSettings();
+      await this.plugin.updateObsidianIgnoreList();
     }));
     new import_obsidian.Setting(containerEl).setName("Hide folders").setDesc("If the configured folders should be hidden or not").addToggle((toggle) => toggle.setValue(this.plugin.settings.areFoldersHidden).onChange(async (value) => {
       this.plugin.settings.areFoldersHidden = value;
       await this.plugin.saveSettings();
+      await this.plugin.updateObsidianIgnoreList();
+    }));
+    new import_obsidian.Setting(containerEl).setName("Add Hidden Folders to Obsidian Exclusion-List").setDesc("Excluded files will be hidden in Search, Graph View, and Unlinked Mentions, less noticeable in Quick Switcher and link suggestions.").addToggle((toggle) => toggle.setValue(this.plugin.settings.addHiddenFoldersToObsidianIgnoreList).onChange(async (value) => {
+      this.plugin.settings.addHiddenFoldersToObsidianIgnoreList = value;
+      await this.plugin.saveSettings();
+      await this.plugin.updateObsidianIgnoreList(!value);
     }));
     new import_obsidian.Setting(containerEl).setName("GitHub").setDesc("Report Issues or Ideas, see the Source Code and Contribute.").addButton((button) => button.buttonEl.innerHTML = '<a href="https://github.com/JonasDoesThings/obsidian-hide-folders" target="_blank">obsidian-hide-folders</a>');
+    new import_obsidian.Setting(containerEl).setName("Donate").setDesc("If you like this open-source plugin, consider a small tip to support my unpaid work.").addButton((button) => button.buttonEl.outerHTML = "<a href='https://www.buymeacoffee.com/jonasdoesthings' target='_blank'><img src='https://cdn.buymeacoffee.com/buttons/default-orange.png' alt='Buy Me A Coffee' height='27' width='116'></a>");
   }
 };
